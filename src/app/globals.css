@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — single source of truth (CLAUDE.md: "Keep all design tokens in
+ * one place"). Visual brand follows the approved Lovable design (see
+ * docs/OPEN_ITEMS.md): warm cream, forest green, muted gold accent, Sora +
+ * Plus Jakarta Sans. Exact accent value is being tuned against the design
+ * ([VERIFY] in OPEN_ITEMS).
+ */
+@theme {
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+
+  /* Surfaces */
+  --color-cream: oklch(0.966 0.012 88); /* page background */
+  --color-cream-100: oklch(0.945 0.014 86); /* subtle panels */
+  --color-cream-200: oklch(0.915 0.016 85); /* borders on cream */
+
+  /* Ink / text */
+  --color-ink: oklch(0.27 0.01 150); /* body text */
+  --color-ink-soft: oklch(0.45 0.012 150); /* secondary text */
+
+  /* Brand greens */
+  --color-forest: oklch(0.33 0.05 167); /* primary / headings */
+  --color-forest-deep: oklch(0.27 0.045 165); /* calling band */
+  --color-night: oklch(0.205 0.012 160); /* near-black bands */
+
+  /* Accent (gold) — primary emphasis / eyebrows */
+  --color-gold: oklch(0.63 0.08 78);
+  --color-gold-soft: oklch(0.72 0.07 80);
+
+  /* Lines */
+  --color-line: oklch(0.87 0.01 110);
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.875rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings use the display face. */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-forest);
+  letter-spacing: -0.01em;
+}
+
+/* Visible focus for keyboard users (WCAG 2.2 AA). */
+:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Native dialog backdrop. */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Eyebrow label used across sections (uppercase, spaced, gold). */
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-gold);
 }

@@ -29,6 +29,22 @@ Last updated: 2026-11-09 (Phase 0).
 ## [VERIFY]
 - **Skills pass mark 60%** (CLAUDE.md §Product rules / Phase 6) — confirm value & rules.
 - Attendance / notice records rules (Phase 6) — verify with client.
+- **Accent gold** exact value — currently `oklch(0.63 0.08 78)` approximating the
+  Lovable gold; tune against the design and check WCAG AA where used for text.
+
+## Pending a dev Supabase project (hard dependency)
+The DB layer (migrations + RLS) is built and tested against a local Postgres,
+but these need a real **development** Supabase project to configure and verify
+end-to-end (no production credentials, ever):
+- Supabase Auth: email verification, password reset, invitation-only sign-up,
+  and **mandatory 2FA for staff/admin** (passkeys/TOTP). Client modules exist
+  (`src/lib/supabase/*`), env is validated (`src/lib/env.ts`); live flows + the
+  server actions land once the project + keys are provided.
+- Applying migrations to the project (`supabase db push`) and wiring session
+  refresh into `src/proxy.ts`.
+When ready: create the project, then the keys will be collected securely
+(`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and the
+server-only `SUPABASE_SERVICE_ROLE_KEY`).
 
 ## Technical follow-ups (see docs/SECURITY.md)
 - Static caching for public pages: all routes are currently dynamically rendered

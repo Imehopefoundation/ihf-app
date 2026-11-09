@@ -1,6 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { Sora, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   // CLAUDE.md: tab title is "IHF".
@@ -17,6 +32,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#f6f2e9",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -28,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   await headers();
 
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${sora.variable} ${plusJakarta.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

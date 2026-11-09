@@ -73,16 +73,37 @@ Runtime deps are kept minimal and pinned (exact versions + committed lockfile).
 | Package | Why |
 | --- | --- |
 | `next`, `react`, `react-dom` | Framework (mandated by CLAUDE.md). |
+| `@supabase/ssr`, `@supabase/supabase-js` | Supabase Auth/DB clients (mandated stack). |
 | `zod` | Server-side input validation (mandated). |
-| `vitest` (dev) | Test runner (mandated). |
+| `vitest` (dev) | Unit test runner (mandated). |
+| `pg`, `@types/pg` (dev) | Drives the RLS tests against a real Postgres. |
 | `tailwindcss`, `eslint`, `typescript`, `@types/*` (dev) | Build/lint/types. |
 
 No packages with unreviewed install scripts are added knowingly; `curl | bash`
 is never used. New deps are justified here as phases add them.
 
 ## 4. SECURITY DEFINER functions
-None yet. Every such function must set `search_path` explicitly, validate the
-caller's role, and be listed here when added (Phase 1+).
+All set `search_path = ''` and are schema-qualified. Owned by the migration role
+(postgres / BYPASSRLS on Supabase) so they can perform their narrow job past
+FORCE RLS. Defined in `supabase/migrations/20261109120000_foundation.sql`.
+
+| Function | Purpose | Notes |
+| --- | --- | --- |
+| `public.has_role(uuid, app_role)` | Role lookup used inside RLS policies | Avoids policy recursion on `user_roles`. Execute granted to `authenticated`. |
+| `public.is_admin()` | `has_role(auth.uid(), 'admin')` | Used by admin read/manage policies. |
+| `public.log_audit(text, text, uuid, jsonb)` | Append-only writer for `audit_log` | Validates action length; inserts with `actor_id = auth.uid()`. |
+| `public.log_record_view(text, uuid)` | Logs a staff view of a record | Thin wrapper over `log_audit`. |
+
+`public.set_updated_at()` is a plain (invoker-rights) trigger function, also with
+`search_path` pinned.
+
+### RLS test coverage
+`scripts/rls-tests/` applies the migrations to a throwaway Postgres (with a
+Supabase `auth` stub in `supabase/tests/setup/`) and asserts, as real queries:
+own-row reads pass; cross-user and cross-role reads return nothing; non-admins
+cannot grant roles; `audit_log` rejects UPDATE/DELETE for every role; and every
+table has RLS **enabled and forced**. Run with `npm run db:test`; CI runs it
+against a Postgres service. These are the per-table/role tests CLAUDE.md requires.
 
 ## 5. Known risks / follow-ups
 - Rate limiter is in-memory (per instance). Must be backed by a shared store

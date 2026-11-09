@@ -28,11 +28,22 @@ npm run dev                  # http://localhost:3000
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm test` / `npm run test:run` | Vitest (watch / once) |
-| `npm run check:rls` | Fail if any DB table lacks forced RLS |
-| `npm run verify` | lint + typecheck + tests + RLS check |
+| `npm run check:rls` | Static check: fail if any migration lacks forced RLS |
+| `npm run db:test` | Run RLS tests against a Postgres (`DATABASE_ADMIN_URL`) |
+| `npm run verify` | lint + typecheck + tests + RLS static check |
 
 A `prepare` script points git at `.githooks/` so the pre-commit secret scan runs
 locally (install [gitleaks](https://github.com/gitleaks/gitleaks) to enable it).
+
+## Database & RLS tests
+Migrations live in `supabase/migrations/`. The RLS suite applies them to a
+throwaway database (with a Supabase `auth` stub from `supabase/tests/setup/`)
+and asserts cross-user/cross-role isolation and the append-only audit log:
+```bash
+# against any Postgres superuser URL (a local dev cluster is fine)
+DATABASE_ADMIN_URL="postgres://postgres@127.0.0.1:5432/postgres" npm run db:test
+```
+CI runs this against a Postgres service automatically.
 
 ## Security
 See [`docs/SECURITY.md`](./docs/SECURITY.md) for the threat model and controls,
