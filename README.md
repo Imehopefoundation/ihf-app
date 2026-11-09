@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IHF Web
 
-## Getting Started
+Web app for **IME HOPE FOUNDATION (IHF)** — a mobile-first, installable PWA with
+a thin public layer and role-based dashboards. It holds children's data, so the
+privacy, safeguarding and security rules in [`CLAUDE.md`](./CLAUDE.md) are hard
+requirements. Build order is defined in [`PROMPTS.md`](./PROMPTS.md).
 
-First, run the development server:
+> Status: **Phase 0 — security baseline** complete. Public pages and the app are
+> built in later phases.
 
+## Stack
+Next.js 16 (TypeScript, App Router) · Tailwind CSS v4 · Zod · Vitest.
+Supabase (Auth/Postgres/Storage/RLS), Paystack/Flutterwave, and Resend are
+introduced in later phases.
+
+## Getting started
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+cp .env.example .env.local   # fill in once Supabase etc. are set up (never commit)
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` / `npm start` | Production build / serve |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` / `npm run test:run` | Vitest (watch / once) |
+| `npm run check:rls` | Fail if any DB table lacks forced RLS |
+| `npm run verify` | lint + typecheck + tests + RLS check |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A `prepare` script points git at `.githooks/` so the pre-commit secret scan runs
+locally (install [gitleaks](https://github.com/gitleaks/gitleaks) to enable it).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Security
+See [`docs/SECURITY.md`](./docs/SECURITY.md) for the threat model and controls,
+and [`docs/OPEN_ITEMS.md`](./docs/OPEN_ITEMS.md) for open questions and the one
+approved deviation from the brief (visual brand follows the Lovable design).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment variables
+See [`.env.example`](./.env.example). Only `NEXT_PUBLIC_*` values reach the
+browser. The Supabase **service_role** key is server-only — never `NEXT_PUBLIC_`,
+never logged. Use a **development** Supabase project in development.

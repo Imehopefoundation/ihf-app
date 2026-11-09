@@ -1,0 +1,17 @@
+# gitleaks configuration. Extends the default ruleset; add allowlist entries
+# only for verified false positives (e.g. example/placeholder values).
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for known-safe placeholders"
+paths = [
+  '''\.env\.example$''',
+  '''README\.md$''',
+  '''docs/.*\.md$''',
+]
+# Placeholder tokens used in docs/examples, never real secrets.
+regexes = [
+  '''your[-_]?(supabase|paystack|resend|flutterwave)[-_]?(key|url|token|secret)''',
+  '''(xxxx|placeholder|example|changeme|dummy)''',
+]

@@ -30,8 +30,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — never commit real secrets. The template IS committed.
 .env*
+!.env.example
+
+# local supabase runtime
+/supabase/.temp
+/supabase/.branches
 
 # vercel
 .vercel

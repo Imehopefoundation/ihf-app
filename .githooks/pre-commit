@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Pre-commit secret scan (CLAUDE.md: "gitleaks as a pre-commit hook and in CI").
+# CI is the hard gate; this is the fast local guard. If gitleaks is not
+# installed locally it warns rather than blocking, so contributors without it
+# can still commit — but CI will reject leaked secrets regardless.
+set -euo pipefail
+
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "gitleaks: scanning staged changes…"
+  if ! gitleaks protect --staged --redact --no-banner; then
+    echo "✖ gitleaks found a potential secret in staged changes. Commit aborted." >&2
+    echo "  If this is a false positive, add it to .gitleaks.toml allowlist." >&2
+    exit 1
+  fi
+else
+  echo "⚠ gitleaks not installed — skipping local secret scan (CI will still enforce it)." >&2
+  echo "  Install: https://github.com/gitleaks/gitleaks#installing" >&2
+fi
