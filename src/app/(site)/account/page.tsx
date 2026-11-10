@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Section } from "@/components/site/primitives";
@@ -41,7 +42,12 @@ export default async function AccountPage() {
             </dd>
           </div>
         </dl>
-        <form action={signOut} className="mt-8">
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Link href="/apply" className="text-sm font-semibold text-forest hover:underline">
+            Start or continue an application →
+          </Link>
+        </div>
+        <form action={signOut} className="mt-6">
           <Button type="submit" variant="secondary">
             Sign out
           </Button>

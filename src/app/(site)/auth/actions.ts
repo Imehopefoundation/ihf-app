@@ -67,10 +67,11 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
     return { status: "error", message: "Enter a valid email and a password of at least 8 characters." };
   }
 
+  let hasSession = false;
   try {
     const supabase = await createClient();
     const origin = publicEnv().NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
       options: { emailRedirectTo: `${origin}/auth/confirm` },
@@ -80,10 +81,13 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
       // Still generic to avoid revealing whether the email is registered.
       return { status: "check-email", message: "Check your email to confirm your account." };
     }
+    hasSession = Boolean(data.session);
   } catch {
     return { status: "error", message: "Sign-up is temporarily unavailable. Please try again soon." };
   }
   logger.info("signup_ok", {});
+  // Email confirmation disabled -> already signed in. Otherwise, confirm first.
+  if (hasSession) redirect("/account");
   return { status: "check-email", message: "Check your email to confirm your account." };
 }
 
