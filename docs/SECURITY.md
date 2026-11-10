@@ -78,6 +78,7 @@ Runtime deps are kept minimal and pinned (exact versions + committed lockfile).
 | `vitest` (dev) | Unit test runner (mandated). |
 | `pdf-lib` | Programmatic PDF generation (IHF Letter) — no HTML, no template injection. |
 | `pg`, `@types/pg` (dev) | Drives the RLS tests against a real Postgres. |
+| `undici` (dev) | Dev/CI only: routes server `fetch` through the sandbox proxy (see `src/instrumentation.ts`). Guarded by `HTTPS_PROXY`; never imported in production. |
 | `tailwindcss`, `eslint`, `typescript`, `@types/*` (dev) | Build/lint/types. |
 
 No packages with unreviewed install scripts are added knowingly; `curl | bash`
@@ -96,6 +97,7 @@ FORCE RLS. Defined in `supabase/migrations/20261109120000_foundation.sql`.
 | `public.log_record_view(text, uuid)` | Logs a staff view of a record | Thin wrapper over `log_audit`. |
 | `public.current_guardian_id()` | The guardian id for `auth.uid()` | Scopes children/applications/consents to the owning guardian. |
 | `public.has_child_access()` | Staff who may view child records | admin / programme_lead / safeguarding_officer. Access is RLS; the **app must call `log_record_view`** on each staff view. |
+| `public.handle_new_user()` | Creates a profile row on signup | Trigger on `auth.users`; inserts only the id (no PII), idempotent. |
 
 ### Field-level encryption (sensitive child/guardian data)
 `src/lib/security/crypto.ts` provides AES-256-GCM authenticated encryption keyed

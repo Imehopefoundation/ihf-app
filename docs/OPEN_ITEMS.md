@@ -32,20 +32,32 @@ Last updated: 2026-11-09 (Phase 0).
 - **Accent gold** exact value — currently `oklch(0.63 0.08 78)` approximating the
   Lovable gold; tune against the design and check WCAG AA where used for text.
 
-## Pending a dev Supabase project (hard dependency)
-The DB layer (migrations + RLS) is built and tested against a local Postgres,
-but these need a real **development** Supabase project to configure and verify
-end-to-end (no production credentials, ever):
-- Supabase Auth: email verification, password reset, invitation-only sign-up,
-  and **mandatory 2FA for staff/admin** (passkeys/TOTP). Client modules exist
-  (`src/lib/supabase/*`), env is validated (`src/lib/env.ts`); live flows + the
-  server actions land once the project + keys are provided.
-- Applying migrations to the project (`supabase db push`) and wiring session
-  refresh into `src/proxy.ts`.
-When ready: create the project, then the keys will be collected securely
-(`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and the
-server-only `SUPABASE_SERVICE_ROLE_KEY`). Also set `FIELD_ENCRYPTION_KEY`
-(32 bytes, outside the DB) for child-data encryption.
+## Supabase project — connected
+Dev project `ihf-app 1` (ref `rfljuftmoqmxddyiordf`) is connected. Network hosts
+allowed; `.env.local` holds URL + anon key + a generated `FIELD_ENCRYPTION_KEY`
+(session-local, gitignored). Server `fetch` routes through the sandbox proxy via
+`src/instrumentation.ts`. Connection verified (REST + Auth reachable, app
+`/account` redirects correctly).
+
+Email/password auth is built and infra-verified (sign up/in/out, `/account`,
+email-confirm route, signup→profile trigger, non-enumerating errors, rate
+limits). Still to do:
+- Apply migrations **part 2** (`grants` + signup trigger) in the SQL Editor
+  (part 1 already applied).
+- Full signup→confirm→signin test (needs email confirmation on, or temporarily
+  off in Supabase Auth settings for dev).
+- **Mandatory 2FA for staff/admin** (passkeys/TOTP) — Supabase MFA enrolment.
+- Password reset flow.
+- Session refresh in `src/proxy.ts` (deferred; server client reads the cookie
+  directly for now — fine for correctness, refresh keeps tokens fresh).
+- `SUPABASE_SERVICE_ROLE_KEY` — only when admin-only server ops need it; will be
+  collected via a secure card then. For production, `FIELD_ENCRYPTION_KEY` and
+  the service_role must be set as real secrets (not the session-local file).
+
+### Lesson captured in tests
+Supabase does **not** auto-grant table privileges on SQL-created tables, so every
+migration grants explicitly and the local RLS harness no longer masks this
+(tests now fail if a grant is missing — matching production).
 
 ### Phase 3 (Applications) — built vs pending
 Built & RLS-tested now: the data model (guardians, children, applications,

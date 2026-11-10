@@ -17,7 +17,7 @@ before(async () => {
       ($1,'a@example.com'),($2,'b@example.com'),($3,'admin@example.com')`,
     [A, B, ADMIN],
   );
-  await seed(db, `insert into public.profiles (id) values ($1),($2),($3)`, [A, B, ADMIN]);
+  // profiles are auto-created by the on_auth_user_created trigger above.
   await seed(
     db,
     `insert into public.user_roles (user_id, role) values ($1,'admin')`,
@@ -55,11 +55,13 @@ describe("profiles RLS", () => {
     assert.equal(r.rowCount, 3);
   });
 
-  test("the anon role sees no profiles", async () => {
-    const r = await asUser(db, { sub: null, role: "anon" }, (c) =>
-      c.query("select id from public.profiles"),
+  test("the anon role has no access to profiles at all", async () => {
+    // anon has no table grant on profiles (defence in depth on top of RLS),
+    // so the query is denied outright — exactly as on real Supabase.
+    await assert.rejects(
+      () => asUser(db, { sub: null, role: "anon" }, (c) => c.query("select id from public.profiles")),
+      /permission denied/i,
     );
-    assert.equal(r.rowCount, 0);
   });
 });
 

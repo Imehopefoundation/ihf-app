@@ -40,6 +40,7 @@ describe("contact_messages", () => {
   });
 
   test("the public cannot read back a message it inserted (no RETURNING)", async () => {
+    // anon has INSERT but not SELECT, so RETURNING is denied.
     await assert.rejects(
       () =>
         asUser(db, { sub: null, role: "anon" }, (c) =>
@@ -48,7 +49,7 @@ describe("contact_messages", () => {
              values ('Ada','ada@example.com','General','Hello there') returning id`,
           ),
         ),
-      /row-level security/i,
+      /permission denied|row-level security/i,
     );
   });
 
@@ -67,10 +68,13 @@ describe("contact_messages", () => {
   });
 
   test("the public cannot read submitted messages", async () => {
-    const r = await asUser(db, { sub: null, role: "anon" }, (c) =>
-      c.query("select * from public.contact_messages"),
+    await assert.rejects(
+      () =>
+        asUser(db, { sub: null, role: "anon" }, (c) =>
+          c.query("select * from public.contact_messages"),
+        ),
+      /permission denied/i,
     );
-    assert.equal(r.rowCount, 0);
   });
 
   test("communications staff can read messages", async () => {
@@ -115,10 +119,14 @@ describe("supporters", () => {
   });
 
   test("the supporter list is private to staff", async () => {
-    const anon = await asUser(db, { sub: null, role: "anon" }, (c) =>
-      c.query("select email from public.supporters"),
+    // anon has no SELECT grant at all; staff (admin) can read.
+    await assert.rejects(
+      () =>
+        asUser(db, { sub: null, role: "anon" }, (c) =>
+          c.query("select email from public.supporters"),
+        ),
+      /permission denied/i,
     );
-    assert.equal(anon.rowCount, 0);
     const admin = await asUser(db, { sub: ADMIN }, (c) =>
       c.query("select email from public.supporters"),
     );

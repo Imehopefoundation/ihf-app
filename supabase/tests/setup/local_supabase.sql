@@ -51,10 +51,7 @@ grant usage on schema auth to anon, authenticated, service_role;
 grant usage on schema public to anon, authenticated, service_role;
 grant select on auth.users to authenticated, service_role;
 
--- Mirror Supabase's default table grants (RLS still gates actual access). Set
--- BEFORE the migrations run so tables created by them inherit these grants;
--- the foundation migration then REVOKEs update/delete on audit_log on top.
-alter default privileges in schema public
-  grant all on tables to anon, authenticated, service_role;
-alter default privileges in schema public
-  grant all on sequences to anon, authenticated, service_role;
+-- NOTE: we deliberately do NOT grant blanket table privileges here. Real
+-- Supabase does not auto-grant on SQL-created tables, so every migration must
+-- grant explicitly; leaving this out keeps the local tests faithful (a missing
+-- grant fails here exactly as it would in production).
