@@ -13,24 +13,32 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const ADMIN_URL =
   process.env.DATABASE_ADMIN_URL ??
   "postgres://postgres@127.0.0.1:54329/postgres";
-const TEST_DB = process.env.TEST_DB_NAME ?? "ihf_rls_test";
 
-function testUrl() {
+function testUrl(dbName) {
   const u = new URL(ADMIN_URL);
-  u.pathname = "/" + TEST_DB;
+  u.pathname = "/" + dbName;
   return u.toString();
 }
 
-/** Drop & recreate the test DB, then apply the auth stub and every migration. */
-export async function setupDatabase() {
+/**
+ * Drop & recreate a fresh test DB, then apply the auth stub and every migration.
+ * Each test file passes a unique dbName so files can run in parallel.
+ */
+export async function setupDatabase(dbName = process.env.TEST_DB_NAME ?? "ihf_rls_test") {
+  if (!/^[a-z_][a-z0-9_]*$/.test(dbName)) throw new Error("invalid test db name");
   const admin = new Client({ connectionString: ADMIN_URL });
   await admin.connect();
-  await admin.query(`drop database if exists ${TEST_DB} with (force)`);
-  await admin.query(`create database ${TEST_DB}`);
+  await admin.query(`drop database if exists ${dbName} with (force)`);
+  await admin.query(`create database ${dbName}`);
   await admin.end();
 
-  const db = new Client({ connectionString: testUrl() });
+  const url = testUrl(dbName);
+  const db = new Client({ connectionString: url });
   await db.connect();
+  // Expose the connection string so asUser can open isolated connections
+  // (the test runner may interleave tests; a shared connection + transactions
+  // would collide).
+  db._testUrl = url;
 
   // 1. Supabase auth stub (test-only).
   const stub = readFileSync(
@@ -60,18 +68,22 @@ export async function setupDatabase() {
  */
 export async function asUser(db, ctx, fn) {
   const role = ctx.role ?? "authenticated";
-  const claims = JSON.stringify({
-    sub: ctx.sub ?? null,
-    role,
-  });
-  await db.query("begin");
+  if (!/^[a-z_]+$/.test(role)) throw new Error("invalid role");
+  const claims = JSON.stringify({ sub: ctx.sub ?? null, role });
+
+  // Own connection per call, so concurrently-scheduled tests never share a
+  // transaction or RLS context.
+  const conn = new Client({ connectionString: db._testUrl });
+  await conn.connect();
   try {
-    await db.query(`set local role ${role}`);
-    // set_config(local=true) is scoped to this transaction.
-    await db.query("select set_config('request.jwt.claims', $1, true)", [claims]);
-    return await fn(db);
+    await conn.query("begin");
+    await conn.query(`set local role ${role}`);
+    await conn.query("select set_config('request.jwt.claims', $1, true)", [claims]);
+    const result = await fn(conn);
+    await conn.query("rollback");
+    return result;
   } finally {
-    await db.query("rollback");
+    await conn.end();
   }
 }
 

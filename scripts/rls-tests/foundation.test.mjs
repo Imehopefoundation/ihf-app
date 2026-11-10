@@ -9,7 +9,7 @@ const ADMIN = "33333333-3333-3333-3333-333333333333";
 let db;
 
 before(async () => {
-  db = await setupDatabase();
+  db = await setupDatabase("ihf_rls_foundation");
   // Seed as superuser (bypasses RLS).
   await seed(
     db,

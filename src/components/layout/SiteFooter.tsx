@@ -7,6 +7,7 @@ const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] =
     links: [
       { href: "/about", label: "About IHF" },
       { href: "/programmes", label: "Programmes" },
+      { href: "/mentors", label: "Mentors" },
       { href: "/pillars", label: "Core Pillars" },
       { href: "/impact", label: "Our Impact" },
     ],
@@ -24,6 +25,7 @@ const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] =
     heading: "Contact",
     links: [
       { href: "/contact", label: "Send us a message" },
+      { href: "/safeguarding", label: "Safeguarding & Policies" },
       { href: "/privacy", label: "Privacy" },
       { href: "/terms", label: "Terms" },
     ],

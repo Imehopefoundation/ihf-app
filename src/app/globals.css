@@ -42,25 +42,34 @@
   color-scheme: light;
 }
 
-body {
-  background: var(--color-cream);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
+/* Base element styles live in @layer base so Tailwind utilities (e.g.
+ * text-cream on a dark band) can override the defaults — unlayered rules would
+ * otherwise beat every utility regardless of specificity. */
+@layer base {
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Headings use the display face. */
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--color-forest);
-  letter-spacing: -0.01em;
-}
+  /* Headings use the display face; colour defaults to forest but is overridable. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-forest);
+    letter-spacing: -0.01em;
+  }
 
-/* Visible focus for keyboard users (WCAG 2.2 AA). */
-:focus-visible {
-  outline: 2px solid var(--color-forest);
-  outline-offset: 2px;
-  border-radius: 2px;
+  /* Visible focus for keyboard users (WCAG 2.2 AA). */
+  :focus-visible {
+    outline: 2px solid var(--color-forest);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* Respect reduced-motion preferences. */
@@ -75,17 +84,14 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Native dialog backdrop. */
-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.4);
-}
-
 /* Eyebrow label used across sections (uppercase, spaced, gold). */
-.eyebrow {
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-gold);
+@layer components {
+  .eyebrow {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-gold);
+  }
 }
