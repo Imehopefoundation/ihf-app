@@ -44,7 +44,16 @@ end-to-end (no production credentials, ever):
   refresh into `src/proxy.ts`.
 When ready: create the project, then the keys will be collected securely
 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and the
-server-only `SUPABASE_SERVICE_ROLE_KEY`).
+server-only `SUPABASE_SERVICE_ROLE_KEY`). Also set `FIELD_ENCRYPTION_KEY`
+(32 bytes, outside the DB) for child-data encryption.
+
+### Phase 3 (Applications) — built vs pending
+Built & RLS-tested now: the data model (guardians, children, applications,
+consents), field-level encryption (`crypto.ts`), and the IHF Letter PDF
+generator — all tested against local Postgres / unit tests. Pending the live
+project (auth-gated): guardian registration & add-child UI, the dual-consent
+flow, the "paired with the right mentor" status flow with email/in-app
+notifications, and wiring staff record-views to `log_record_view`.
 
 ## Technical follow-ups (see docs/SECURITY.md)
 - Static caching for public pages: all routes are currently dynamically rendered

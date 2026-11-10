@@ -76,6 +76,7 @@ Runtime deps are kept minimal and pinned (exact versions + committed lockfile).
 | `@supabase/ssr`, `@supabase/supabase-js` | Supabase Auth/DB clients (mandated stack). |
 | `zod` | Server-side input validation (mandated). |
 | `vitest` (dev) | Unit test runner (mandated). |
+| `pdf-lib` | Programmatic PDF generation (IHF Letter) — no HTML, no template injection. |
 | `pg`, `@types/pg` (dev) | Drives the RLS tests against a real Postgres. |
 | `tailwindcss`, `eslint`, `typescript`, `@types/*` (dev) | Build/lint/types. |
 
@@ -93,6 +94,17 @@ FORCE RLS. Defined in `supabase/migrations/20261109120000_foundation.sql`.
 | `public.is_admin()` | `has_role(auth.uid(), 'admin')` | Used by admin read/manage policies. |
 | `public.log_audit(text, text, uuid, jsonb)` | Append-only writer for `audit_log` | Validates action length; inserts with `actor_id = auth.uid()`. |
 | `public.log_record_view(text, uuid)` | Logs a staff view of a record | Thin wrapper over `log_audit`. |
+| `public.current_guardian_id()` | The guardian id for `auth.uid()` | Scopes children/applications/consents to the owning guardian. |
+| `public.has_child_access()` | Staff who may view child records | admin / programme_lead / safeguarding_officer. Access is RLS; the **app must call `log_record_view`** on each staff view. |
+
+### Field-level encryption (sensitive child/guardian data)
+`src/lib/security/crypto.ts` provides AES-256-GCM authenticated encryption keyed
+from `FIELD_ENCRYPTION_KEY` (held **outside** the database). Child/guardian PII
+(name, DOB, school, health/welfare notes, guardian contacts) is encrypted by the
+app before insert; the `*_enc` columns hold ciphertext only, so a DB dump/backup
+never contains plaintext. Decryption fails closed on tampering. Tested in
+`crypto.test.ts`. The IHF Letter PDF (`src/lib/pdf/ihf-letter.ts`) is built
+programmatically (no HTML) and length-limits/strips every inserted value.
 
 `public.set_updated_at()` is a plain (invoker-rights) trigger function, also with
 `search_path` pinned.
