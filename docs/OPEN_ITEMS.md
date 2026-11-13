@@ -13,24 +13,35 @@ Last updated: 2026-11-09 (Phase 0).
   corrected copy still follow the brief. The brief's **logo** and **imagery**
   rules still apply (approved SVG logos only; consented photography only).
 
+## Resolved by consultation (12 Nov 2026) — see docs/CONSULTATION.md
+- **Donation currencies / recurring**: Naira (Paystack) + USD/GBP (PayPal); **no
+  recurring debit**; anonymous/optional donor details; thank-you **page + receipt**
+  on redirect; newsletter nurture instead of auto-charge.
+- **Aggregate impact total**: no fabricated numbers; publish an **external-audit
+  result** plus **consented** mentor/mentee stories under Impact.
+- **Product shape**: it's an **LMS** — monthly single-course modules (reading list +
+  video lectures + notes), **impromptu/random tests**, QA review of uploaded video,
+  mentee **motivational dashboard (no grades)**, in-app support, role-scoped logins.
+
 ## [CONFIRM] — need the client/owner to confirm
-- **Logo files**: supplied as PNG; CLAUDE.md requires **SVG** in `public/brand/`
-  (`logo-black.svg`, `logo-white.svg`, `icon-black.svg`, `icon-white.svg`).
-  Currently using `logo-black.png` / `logo-white.png` as placeholders. Need: SVG
-  versions, and the **icon-only** mark (no wordmark) for favicon / app icon.
-- **Aggregate impact total**: may a single aggregated total be shown publicly, or
-  nothing until leadership approves each figure? (CLAUDE.md §Impact.)
-- **Donation currencies** and one-time vs recurring (Phase 8).
-- **Contact details**: public email, phone, and **WhatsApp** number for Contact page.
+- ⚠️ **PayPal** added alongside Paystack for USD/GBP — **stack addition** vs
+  CLAUDE.md; needs your sign-off to fold into the brief (Phase 8).
+- **Logo + colours**: founder to send the planning document. (Current logos are PNG
+  placeholders; CLAUDE.md requires SVG + an icon-only mark for favicon/app icon.)
 - **Leadership**: names/photos/bios are placeholders until IHF admins supply approved ones.
 - **Privacy notice**: draft for Nigerian counsel (Nigeria Data Protection Act).
   Never claim legal compliance until approved.
+- **Public contact**: consultation puts *support* in-app; a public WhatsApp/phone on
+  Contact is optional — confirm whether you want one shown.
 
 ## [VERIFY]
-- **Skills pass mark 60%** (CLAUDE.md §Product rules / Phase 6) — confirm value & rules.
+- **Skills pass mark** — CLAUDE.md says 60% [VERIFY]; not settled on the call.
+- **Age bands** — CLAUDE.md 6–11 / 12–16 kept as authoritative (call loosely said
+  "9–12"); confirm if different.
 - Attendance / notice records rules (Phase 6) — verify with client.
 - **Accent gold** exact value — currently `oklch(0.63 0.08 78)` approximating the
-  Lovable gold; tune against the design and check WCAG AA where used for text.
+  Lovable gold; finalise against the planning doc's colours; check WCAG AA for text.
+- **`religion` field** added to collected data (mentors/mentees) — confirm handling.
 
 ## Supabase project — connected
 Dev project `ihf-app 1` (ref `rfljuftmoqmxddyiordf`) is connected. Network hosts
