@@ -15,8 +15,8 @@ const variants: Record<ButtonVariant, string> = {
     "border border-forest text-forest hover:bg-forest/5 focus-visible:outline-forest",
   ghost: "text-forest hover:bg-cream-100 focus-visible:outline-forest",
   gold: "bg-gold text-night hover:bg-gold-soft focus-visible:outline-forest",
-  // Give / donate — warm terracotta, reserved for giving actions.
-  give: "bg-give text-white hover:bg-give-dark focus-visible:outline-give",
+  // Give / donate — generous gold with dark text, reserved for giving actions.
+  give: "bg-give text-night hover:bg-give-dark focus-visible:outline-forest",
 };
 
 const sizes: Record<ButtonSize, string> = {

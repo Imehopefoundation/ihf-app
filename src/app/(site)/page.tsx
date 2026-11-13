@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { buttonClasses } from "@/components/ui/Button";
 import {
   Section,
   Eyebrow,
   SectionTitle,
-  Lead,
   Scripture,
-  ImagePlaceholder,
 } from "@/components/site/primitives";
 import { PillarsInteractive } from "@/components/site/PillarsInteractive";
+import { HeroHope } from "@/components/site/HeroHope";
+import { OurStory } from "@/components/site/OurStory";
 
 const PROGRAMMES = [
   {
@@ -49,38 +48,11 @@ const INVITATIONS = [
 export default function Home() {
   return (
     <>
-      {/* Hero */}
-      <Section tone="cream" className="pt-16 sm:pt-20">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <Eyebrow>Financial competence · Faith · Technical competence</Eyebrow>
-            <h1 className="mt-4 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              Raising a generation that{" "}
-              <span className="italic text-gold">raises others.</span>
-            </h1>
-            <Lead>
-              IME HOPE FOUNDATION brings together Christian faith, practical
-              skills, financial competence, education and welfare support — so
-              that every member grows, and then equips someone else to grow too.
-            </Lead>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/join" className={buttonClasses("primary", "lg")}>
-                Apply as a mentee
-              </Link>
-              <Link href="/programmes" className={buttonClasses("secondary", "lg")}>
-                Explore our programmes
-              </Link>
-              <Link href="/give" className={buttonClasses("give", "lg")}>
-                Give
-              </Link>
-            </div>
-          </div>
-          <ImagePlaceholder
-            label="Skills Development"
-            caption="Masterclasses in AI, Fashion Design and Content Production, taught with patience and purpose."
-          />
-        </div>
-      </Section>
+      {/* Hero — "We rise by raising others" + youth in the map of Nigeria */}
+      <HeroHope />
+
+      {/* Our Story */}
+      <OurStory />
 
       {/* Our calling */}
       <Section tone="forest">
