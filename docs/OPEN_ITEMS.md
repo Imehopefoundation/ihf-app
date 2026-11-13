@@ -7,10 +7,15 @@ Last updated: 2026-11-09 (Phase 0).
 
 ## Approved deviations from CLAUDE.md
 - **Brand palette & type follow the Lovable design, not CLAUDE.md's brand section.**
-  Owner decision (2026-11-09): keep Lovable's look — forest green / warm cream /
-  gold accent, fonts **Sora** (headings) + **Plus Jakarta Sans** (body) — instead
-  of the brief's monochrome + bronze / Galano-Figtree. Layout, structure and the
-  corrected copy still follow the brief. The brief's **logo** and **imagery**
+  Owner decision (2026-11-09, updated 2026-11-13): **black primary / warm cream /
+  gold accent**, fonts **Sora** (headings) + **Plus Jakarta Sans** (body). The
+  primary colour was changed from forest green to **black** at the owner's
+  request (2026-11-13) — this moves the palette back toward the brief's
+  monochrome-plus-one-accent intent (black + gold instead of bronze). The
+  `forest`/`forest-deep`/`night` token names are retained (now holding black
+  values) so components did not need to change. Fonts still differ from the
+  brief's Galano/Figtree. Layout, structure and the corrected copy follow the
+  brief. The brief's **logo** and **imagery**
   rules still apply (approved SVG logos only; consented photography only).
 
 ## Imagery placeholders — MUST swap before launch [CONFIRM]

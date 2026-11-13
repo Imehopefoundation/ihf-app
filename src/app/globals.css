@@ -3,7 +3,7 @@
 /*
  * Design tokens — single source of truth (CLAUDE.md: "Keep all design tokens in
  * one place"). Visual brand follows the approved Lovable design (see
- * docs/OPEN_ITEMS.md): warm cream, forest green, muted gold accent, Sora +
+ * docs/OPEN_ITEMS.md): warm cream, black primary, muted gold accent, Sora +
  * Plus Jakarta Sans. Exact accent value is being tuned against the design
  * ([VERIFY] in OPEN_ITEMS).
  */
@@ -20,10 +20,11 @@
   --color-ink: #2A2824; /* warm near-black body text */
   --color-ink-soft: #6B655C; /* secondary text */
 
-  /* Brand greens — deep emerald */
-  --color-forest: #0E5C46; /* primary / headings */
-  --color-forest-deep: #0A4536; /* calling band */
-  --color-night: #14211C; /* near-black green bands */
+  /* Brand primary — black (kept under the `forest` token names so every
+   * component that already uses them picks up the change). */
+  --color-forest: #1A1A1A; /* primary / headings (near-black) */
+  --color-forest-deep: #000000; /* deepest band / hover (rich black) */
+  --color-night: #0A0A0A; /* near-black bands / dark text on gold */
 
   /* Accent (gold) — excellence / emphasis / eyebrows (readable on ivory) */
   --color-gold: #B07D22;

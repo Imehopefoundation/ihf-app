@@ -37,7 +37,7 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
         <div className="relative mx-auto aspect-square w-full max-w-md">
           <div aria-hidden="true" className="absolute inset-6 rounded-full bg-gold/15 blur-3xl" />
 
-          {/* Nigeria map: photo (clipped) or emerald fill */}
+          {/* Nigeria map: photo (clipped) or dark fill */}
           <svg
             viewBox={NIGERIA_VIEWBOX}
             className="absolute inset-0 h-full w-full drop-shadow-sm"
@@ -49,8 +49,8 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
                 <path d={NIGERIA_PATH} />
               </clipPath>
               <linearGradient id="nga-fill" x1="0" y1="0" x2="0.4" y2="1">
-                <stop offset="0" stopColor="#12664E" />
-                <stop offset="1" stopColor="#0A4536" />
+                <stop offset="0" stopColor="#262626" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
             </defs>
             <g clipPath="url(#nga-clip)">

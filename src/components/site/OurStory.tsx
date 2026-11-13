@@ -54,7 +54,7 @@ export function OurStory({ photoSrc }: { photoSrc?: string }) {
                   ))}
                 </mask>
                 <linearGradient id="story-fill" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#12664E" />
+                  <stop offset="0" stopColor="#1A1A1A" />
                   <stop offset="1" stopColor="#C2912F" />
                 </linearGradient>
               </defs>
