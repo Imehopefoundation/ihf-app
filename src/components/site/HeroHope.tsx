@@ -34,7 +34,7 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
         </div>
 
         {/* Youth within the map of Africa */}
-        <div className="relative mx-auto aspect-[600/674] w-full max-w-sm">
+        <div className="relative mx-auto aspect-[600/674] w-full max-w-lg">
           <div aria-hidden="true" className="absolute inset-6 rounded-full bg-gold/15 blur-3xl" />
 
           {/* Africa map: photo (clipped) or dark fill */}
