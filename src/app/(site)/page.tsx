@@ -8,6 +8,7 @@ import {
   Scripture,
   ImagePlaceholder,
 } from "@/components/site/primitives";
+import { PillarsInteractive } from "@/components/site/PillarsInteractive";
 
 const PROGRAMMES = [
   {
@@ -28,14 +29,6 @@ const PROGRAMMES = [
     body:
       "Standing with members and communities in seasons of need, with respect and care, so that help is given as dignity, never charity.",
   },
-];
-
-const PILLARS = [
-  "Kingdom-mindedness",
-  "Diligence",
-  "Integrity",
-  "Respect and Honour",
-  "Accountability",
 ];
 
 const CYCLE = [
@@ -138,45 +131,9 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Five pillars preview */}
+      {/* Five pillars — interactive selector (tap a pillar to see its scripture) */}
       <Section tone="white">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div>
-            <Eyebrow>The five core pillars</Eyebrow>
-            <SectionTitle>Biblical principles that guide everyday decisions.</SectionTitle>
-            <ol className="mt-8 divide-y divide-cream-200 border-y border-cream-200">
-              {PILLARS.map((pillar, i) => (
-                <li key={pillar} className="flex items-center gap-4 py-3">
-                  <span className="text-xs font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-medium text-ink">{pillar}</span>
-                </li>
-              ))}
-            </ol>
-            <Link href="/pillars" className="mt-6 inline-block text-sm font-semibold text-forest hover:underline">
-              Reflect on all five pillars →
-            </Link>
-          </div>
-          <div className="rounded-[var(--radius-lg)] bg-cream-100 p-8">
-            <Scripture reference="Matthew 6:33 (KJV)">
-              But seek ye first the kingdom of God, and his righteousness; and
-              all these things shall be added unto you.
-            </Scripture>
-            <div className="mt-6 grid gap-4 border-t border-cream-200 pt-6 sm:grid-cols-2">
-              <div>
-                <h4 className="text-xs font-semibold uppercase tracking-widest text-ink-soft">What it means</h4>
-                <p className="mt-1 text-sm text-ink">
-                  Putting God&apos;s purposes first in every ambition, decision and relationship.
-                </p>
-              </div>
-              <div>
-                <h4 className="text-xs font-semibold uppercase tracking-widest text-ink-soft">In daily life</h4>
-                <p className="mt-1 text-sm text-ink">
-                  Begin each project by asking how it serves God and others, not only yourself.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PillarsInteractive />
       </Section>
 
       {/* Multiplying cycle */}
