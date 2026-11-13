@@ -25,9 +25,14 @@
   --color-forest-deep: oklch(0.27 0.045 165); /* calling band */
   --color-night: oklch(0.205 0.012 160); /* near-black bands */
 
-  /* Accent (gold) — primary emphasis / eyebrows */
-  --color-gold: oklch(0.63 0.08 78);
-  --color-gold-soft: oklch(0.72 0.07 80);
+  /* Accent (gold) — excellence / primary emphasis / eyebrows */
+  --color-gold: #9A7B3F;
+  --color-gold-soft: #B2965A;
+
+  /* Give / donate accent — warm terracotta, reserved for giving CTAs */
+  --color-give: #B86B3A;
+  --color-give-dark: #9A5730;
+  --color-give-tint: #F6ECE3;
 
   /* Lines */
   --color-line: oklch(0.87 0.01 110);

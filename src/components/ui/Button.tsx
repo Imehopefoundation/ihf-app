@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "gold";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "gold" | "give";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
@@ -15,6 +15,8 @@ const variants: Record<ButtonVariant, string> = {
     "border border-forest text-forest hover:bg-forest/5 focus-visible:outline-forest",
   ghost: "text-forest hover:bg-cream-100 focus-visible:outline-forest",
   gold: "bg-gold text-night hover:bg-gold-soft focus-visible:outline-forest",
+  // Give / donate — warm terracotta, reserved for giving actions.
+  give: "bg-give text-white hover:bg-give-dark focus-visible:outline-give",
 };
 
 const sizes: Record<ButtonSize, string> = {

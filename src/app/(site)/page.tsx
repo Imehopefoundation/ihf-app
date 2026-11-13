@@ -70,7 +70,7 @@ export default function Home() {
               <Link href="/programmes" className={buttonClasses("secondary", "lg")}>
                 Explore our programmes
               </Link>
-              <Link href="/give" className={buttonClasses("ghost", "lg")}>
+              <Link href="/give" className={buttonClasses("give", "lg")}>
                 Give
               </Link>
             </div>

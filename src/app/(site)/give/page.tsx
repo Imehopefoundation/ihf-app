@@ -35,7 +35,7 @@ export default function GivePage() {
               it opens, please contact us and our finance team will share the
               appropriate ways to give.
             </p>
-            <Link href="/contact" className={`${buttonClasses("primary", "md")} mt-6`}>
+            <Link href="/contact" className={`${buttonClasses("give", "md")} mt-6`}>
               Ask about giving
             </Link>
           </div>
