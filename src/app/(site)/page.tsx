@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <>
       {/* Hero — "Raising a generation that raises others" + youth in the map of Nigeria */}
-      <HeroHope />
+      <HeroHope photoSrc="/photos/hero-hope.webp" />
 
       {/* Our Story */}
       <OurStory photoSrc="/photos/our-story.webp" />

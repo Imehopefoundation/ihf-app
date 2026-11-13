@@ -22,9 +22,13 @@ Last updated: 2026-11-09 (Phase 0).
   **Replace before go-live** with a consented IHF group photo (EXIF/GPS already
   stripped on import; do the same for the replacement). The `photoSrc` prop on
   `OurStory` makes the swap a one-line change.
-- **Hero portrait** (`HeroHope`, clipped into the Nigeria map): still a neutral
-  silhouette placeholder — awaiting a consented portrait (arms raised) via the
-  same `photoSrc` prop.
+- **`public/photos/hero-hope.webp`** (Hero, clipped into the Nigeria map):
+  owner-supplied **placeholder** (2026-11-13) — a child with arms raised wearing
+  an "I HAVE HOPE" shirt. Same caveat as above: **stock photo of an identifiable
+  child**; replace before go-live with a consented portrait (EXIF/GPS stripped on
+  import; do the same for the replacement). Swap via the `HeroHope` `photoSrc`
+  prop. The floating "I have hope" tag now shows only for the silhouette
+  placeholder (the real portrait carries the message on the shirt).
 
 ## Resolved by consultation (12 Nov 2026) — see docs/CONSULTATION.md
 - **Payments**: owner confirmed **multiple options** via a method selector —

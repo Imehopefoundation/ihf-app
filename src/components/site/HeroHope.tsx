@@ -88,9 +88,12 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
             </svg>
           )}
 
-          <span className="absolute left-1/2 top-[56%] -translate-x-1/2 rounded-full bg-give px-4 py-1.5 text-sm font-bold text-night shadow-md">
-            I have hope
-          </span>
+          {/* Floating tag only for the placeholder; a real portrait carries its own "I have hope". */}
+          {!photoSrc && (
+            <span className="absolute left-1/2 top-[56%] -translate-x-1/2 rounded-full bg-give px-4 py-1.5 text-sm font-bold text-night shadow-md">
+              I have hope
+            </span>
+          )}
 
           {!photoSrc && (
             <p className="absolute inset-x-0 -bottom-6 text-center text-xs text-ink-soft">
