@@ -34,7 +34,7 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
         </div>
 
         {/* Youth within the map of Africa */}
-        <div className="relative mx-auto aspect-[600/674] w-full max-w-lg">
+        <div className="relative mx-auto aspect-[600/674] w-full max-w-md">
           <div aria-hidden="true" className="absolute inset-6 rounded-full bg-gold/15 blur-3xl" />
 
           {/* Africa map: photo (clipped) or dark fill */}
@@ -52,12 +52,21 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
                 <stop offset="0" stopColor="#262626" />
                 <stop offset="1" stopColor="#000000" />
               </linearGradient>
+              <filter id="africa-soft" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="12" />
+              </filter>
             </defs>
             <g clipPath="url(#africa-clip)">
-              {photoSrc ? (
-                <image href={photoSrc} x="0" y="0" width="600" height="674" preserveAspectRatio="xMidYMid slice" />
-              ) : (
-                <rect x="0" y="0" width="600" height="674" fill="url(#africa-fill)" />
+              {/* dark base so the continent reads even where nothing covers it */}
+              <rect x="0" y="0" width="600" height="674" fill="url(#africa-fill)" />
+              {photoSrc && (
+                <>
+                  {/* blurred, dimmed copy fills the whole continent (no hard seam) */}
+                  <image href={photoSrc} x="0" y="0" width="600" height="674" preserveAspectRatio="xMidYMid slice" filter="url(#africa-soft)" opacity="0.5" />
+                  {/* sharp copy, framed smaller & centred so the full "I HAVE HOPE"
+                      shirt + some street background show (zoomed out, not cropped) */}
+                  <image href={photoSrc} x="-100" y="118" width="800" height="437" preserveAspectRatio="xMidYMid slice" />
+                </>
               )}
             </g>
             <path d={AFRICA_PATH} fill="none" stroke="var(--color-gold)" strokeWidth="2.5" opacity="0.5" />
