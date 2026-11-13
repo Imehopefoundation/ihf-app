@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
-import { NIGERIA_PATH, NIGERIA_VIEWBOX } from "@/components/site/NigeriaMap";
+import { AFRICA_PATH, AFRICA_VIEWBOX } from "@/components/site/AfricaMap";
 import { Eyebrow } from "@/components/site/primitives";
 
 /**
  * Landing hero: "Raising a generation that raises others" beside a young person
- * set WITHIN the map of Nigeria (photo clipped to the outline) with an "I have hope"
- * tag. `photoSrc` is a CONSENTED portrait — until it arrives a dignified
- * silhouette placeholder stands in. CLAUDE.md: consented photography only.
+ * set WITHIN the map of Africa (photo clipped to the continent outline) with an
+ * "I have hope" tag. `photoSrc` is a CONSENTED portrait — until it arrives a
+ * dignified silhouette placeholder stands in. CLAUDE.md: consented photography only.
  */
 export function HeroHope({ photoSrc }: { photoSrc?: string }) {
   return (
@@ -33,34 +33,34 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
           </div>
         </div>
 
-        {/* Youth within the map of Nigeria */}
-        <div className="relative mx-auto aspect-square w-full max-w-md">
+        {/* Youth within the map of Africa */}
+        <div className="relative mx-auto aspect-[600/674] w-full max-w-sm">
           <div aria-hidden="true" className="absolute inset-6 rounded-full bg-gold/15 blur-3xl" />
 
-          {/* Nigeria map: photo (clipped) or dark fill */}
+          {/* Africa map: photo (clipped) or dark fill */}
           <svg
-            viewBox={NIGERIA_VIEWBOX}
+            viewBox={AFRICA_VIEWBOX}
             className="absolute inset-0 h-full w-full drop-shadow-sm"
             role="img"
-            aria-label="A young person full of hope, within the map of Nigeria"
+            aria-label="A young person full of hope, within the map of Africa"
           >
             <defs>
-              <clipPath id="nga-clip">
-                <path d={NIGERIA_PATH} />
+              <clipPath id="africa-clip">
+                <path d={AFRICA_PATH} />
               </clipPath>
-              <linearGradient id="nga-fill" x1="0" y1="0" x2="0.4" y2="1">
+              <linearGradient id="africa-fill" x1="0" y1="0" x2="0.4" y2="1">
                 <stop offset="0" stopColor="#262626" />
                 <stop offset="1" stopColor="#000000" />
               </linearGradient>
             </defs>
-            <g clipPath="url(#nga-clip)">
+            <g clipPath="url(#africa-clip)">
               {photoSrc ? (
-                <image href={photoSrc} x="0" y="54.9" width="600" height="490.3" preserveAspectRatio="xMidYMid slice" />
+                <image href={photoSrc} x="0" y="0" width="600" height="674" preserveAspectRatio="xMidYMid slice" />
               ) : (
-                <rect x="0" y="54.9" width="600" height="490.3" fill="url(#nga-fill)" />
+                <rect x="0" y="0" width="600" height="674" fill="url(#africa-fill)" />
               )}
             </g>
-            <path d={NIGERIA_PATH} fill="none" stroke="var(--color-gold)" strokeWidth="2.5" opacity="0.5" />
+            <path d={AFRICA_PATH} fill="none" stroke="var(--color-gold)" strokeWidth="2.5" opacity="0.5" />
           </svg>
 
           {/* Dignified silhouette placeholder (overlay) — hidden once a photo is set */}
@@ -97,7 +97,7 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
 
           {!photoSrc && (
             <p className="absolute inset-x-0 -bottom-6 text-center text-xs text-ink-soft">
-              Placeholder — your consented portrait is clipped into Nigeria here.
+              Placeholder — your consented portrait is clipped into Africa here.
             </p>
           )}
         </div>

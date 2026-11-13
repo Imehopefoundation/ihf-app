@@ -27,7 +27,7 @@ Last updated: 2026-11-09 (Phase 0).
   **Replace before go-live** with a consented IHF group photo (EXIF/GPS already
   stripped on import; do the same for the replacement). The `photoSrc` prop on
   `OurStory` makes the swap a one-line change.
-- **`public/photos/hero-hope.webp`** (Hero, clipped into the Nigeria map):
+- **`public/photos/hero-hope.webp`** (Hero, clipped into the Africa map):
   owner-supplied **placeholder** (2026-11-13) — a child with arms raised wearing
   an "I HAVE HOPE" shirt. Same caveat as above: **stock photo of an identifiable
   child**; replace before go-live with a consented portrait (EXIF/GPS stripped on
