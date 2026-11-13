@@ -54,10 +54,14 @@ why it's an app, not a brochure site. **No mentor–mentee messaging** (confirms
 ## Donations (extends CLAUDE.md; one stack addition needs approval)
 - **No app access for donors.** Donations are private by default (no donor wall,
   no public amounts) — confirms CLAUDE.md.
-- Processors: **Paystack** (Naira, primary) **+ PayPal** (USD / GBP for diaspora).
-  ⚠️ **PayPal is a stack addition** vs CLAUDE.md (Paystack/Flutterwave, Stripe
-  only if needed) — client explicitly asked for it. Needs your sign-off to fold
-  into the brief.
+- **Multiple payment options must be offered** (owner instruction, 13 Nov 2026) —
+  the donate flow presents a **method selector**, not a single processor:
+  - **Paystack** — Naira (cards, bank, USSD).
+  - **PayPal** — USD / GBP for diaspora donors. (Approved stack addition vs the
+    brief's Paystack/Flutterwave.)
+  - **Direct bank transfer** — account details shown, good for anonymous / large gifts.
+  - Built to be **extensible** so more methods (e.g. Flutterwave) can be added.
+  Each option ends in the same private thank-you page + receipt.
 - **No recurring debit** (explicitly rejected). Donor nurture is via **newsletter
   reminders**, not auto-charge.
 - **Anonymous giving allowed**; name/email/registration **optional**.

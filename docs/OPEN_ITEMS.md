@@ -14,9 +14,10 @@ Last updated: 2026-11-09 (Phase 0).
   rules still apply (approved SVG logos only; consented photography only).
 
 ## Resolved by consultation (12 Nov 2026) — see docs/CONSULTATION.md
-- **Donation currencies / recurring**: Naira (Paystack) + USD/GBP (PayPal); **no
-  recurring debit**; anonymous/optional donor details; thank-you **page + receipt**
-  on redirect; newsletter nurture instead of auto-charge.
+- **Payments**: owner confirmed **multiple options** via a method selector —
+  **Paystack** (Naira), **PayPal** (USD/GBP), **direct bank transfer**, extensible
+  (PayPal approved). **No recurring debit**; anonymous/optional donor details;
+  thank-you **page + receipt** on redirect; newsletter nurture instead of auto-charge.
 - **Aggregate impact total**: no fabricated numbers; publish an **external-audit
   result** plus **consented** mentor/mentee stories under Impact.
 - **Product shape**: it's an **LMS** — monthly single-course modules (reading list +
@@ -24,8 +25,6 @@ Last updated: 2026-11-09 (Phase 0).
   mentee **motivational dashboard (no grades)**, in-app support, role-scoped logins.
 
 ## [CONFIRM] — need the client/owner to confirm
-- ⚠️ **PayPal** added alongside Paystack for USD/GBP — **stack addition** vs
-  CLAUDE.md; needs your sign-off to fold into the brief (Phase 8).
 - **Logo + colours**: founder to send the planning document. (Current logos are PNG
   placeholders; CLAUDE.md requires SVG + an icon-only mark for favicon/app icon.)
 - **Leadership**: names/photos/bios are placeholders until IHF admins supply approved ones.
