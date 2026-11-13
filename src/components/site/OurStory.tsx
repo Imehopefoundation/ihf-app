@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 
-const FRAME_W = 104;
-const GAP = 14;
-const FRAME_H = 300;
-const COMPOSITE_W = FRAME_W * 3 + GAP * 2;
-const FRAMES = [0, 1, 2].map((i) => i * (FRAME_W + GAP));
+// Three staggered cylindrical (pill) frames — windows into ONE image.
+const PILLS = [
+  { x: 0, y: 22, w: 100, h: 236 },
+  { x: 122, y: 0, w: 100, h: 300 },
+  { x: 244, y: 40, w: 100, h: 216 },
+];
+const VB_W = 344;
+const VB_H = 300;
 
 /**
- * "Our Story" — a story quote beside ONE photograph shown through three rounded
- * windows (not three photos). `photoSrc` is a CONSENTED group photo of IHF
- * members; until it arrives a warm placeholder makes the single-image effect
- * visible. CLAUDE.md: consented photography only.
+ * "Our Story" — story quote beside ONE photograph shown through three
+ * cylindrical (pill) frames. `photoSrc` is a CONSENTED group photo of IHF
+ * members; until it arrives a warm placeholder shows the single-image effect.
+ * CLAUDE.md: consented photography only (no stock/identifiable child photos).
  */
 export function OurStory({ photoSrc }: { photoSrc?: string }) {
   return (
@@ -35,19 +38,19 @@ export function OurStory({ photoSrc }: { photoSrc?: string }) {
             </Link>
           </div>
 
-          {/* one photograph shown through three rounded windows */}
-          <div className="mx-auto w-full max-w-[360px]">
+          {/* one photograph shown through three cylindrical frames */}
+          <div className="mx-auto w-full max-w-[380px]">
             <svg
-              viewBox={`0 0 ${COMPOSITE_W} ${FRAME_H}`}
+              viewBox={`0 0 ${VB_W} ${VB_H}`}
               className="h-auto w-full"
               role="img"
               aria-label="IHF members — a single consented photograph shown across three frames"
             >
               <defs>
-                <mask id="story-frames">
-                  <rect width={COMPOSITE_W} height={FRAME_H} fill="black" />
-                  {FRAMES.map((x) => (
-                    <rect key={x} x={x} y="0" width={FRAME_W} height={FRAME_H} rx="30" fill="white" />
+                <mask id="story-pills">
+                  <rect width={VB_W} height={VB_H} fill="black" />
+                  {PILLS.map((p, i) => (
+                    <rect key={i} x={p.x} y={p.y} width={p.w} height={p.h} rx={p.w / 2} fill="white" />
                   ))}
                 </mask>
                 <linearGradient id="story-fill" x1="0" y1="0" x2="1" y2="1">
@@ -61,24 +64,23 @@ export function OurStory({ photoSrc }: { photoSrc?: string }) {
                   href={photoSrc}
                   x="0"
                   y="0"
-                  width={COMPOSITE_W}
-                  height={FRAME_H}
+                  width={VB_W}
+                  height={VB_H}
                   preserveAspectRatio="xMidYMid slice"
-                  mask="url(#story-frames)"
+                  mask="url(#story-pills)"
                 />
               ) : (
-                <rect width={COMPOSITE_W} height={FRAME_H} fill="url(#story-fill)" mask="url(#story-frames)" />
+                <rect width={VB_W} height={VB_H} fill="url(#story-fill)" mask="url(#story-pills)" />
               )}
 
-              {/* frame outlines */}
-              {FRAMES.map((x) => (
+              {PILLS.map((p, i) => (
                 <rect
-                  key={x}
-                  x={x + 0.75}
-                  y="0.75"
-                  width={FRAME_W - 1.5}
-                  height={FRAME_H - 1.5}
-                  rx="30"
+                  key={i}
+                  x={p.x + 0.75}
+                  y={p.y + 0.75}
+                  width={p.w - 1.5}
+                  height={p.h - 1.5}
+                  rx={p.w / 2}
                   fill="none"
                   stroke="var(--color-cream-200)"
                   strokeWidth="1.5"

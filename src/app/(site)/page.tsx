@@ -48,7 +48,7 @@ const INVITATIONS = [
 export default function Home() {
   return (
     <>
-      {/* Hero — "We rise by raising others" + youth in the map of Nigeria */}
+      {/* Hero — "Raising a generation that raises others" + youth in the map of Nigeria */}
       <HeroHope />
 
       {/* Our Story */}

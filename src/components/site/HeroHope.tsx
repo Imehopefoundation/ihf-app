@@ -4,8 +4,8 @@ import { NIGERIA_PATH, NIGERIA_VIEWBOX } from "@/components/site/NigeriaMap";
 import { Eyebrow } from "@/components/site/primitives";
 
 /**
- * Landing hero: "We rise by raising others" beside a young person set WITHIN the
- * map of Nigeria (photo clipped to the Nigeria outline) with an "I have hope"
+ * Landing hero: "Raising a generation that raises others" beside a young person
+ * set WITHIN the map of Nigeria (photo clipped to the outline) with an "I have hope"
  * tag. `photoSrc` is a CONSENTED portrait — until it arrives a dignified
  * silhouette placeholder stands in. CLAUDE.md: consented photography only.
  */
@@ -16,11 +16,8 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
         <div>
           <Eyebrow>Faith · Financial Literacy · Community</Eyebrow>
           <h1 className="mt-4 text-balance text-4xl font-semibold leading-[1.04] tracking-tight sm:text-5xl lg:text-6xl">
-            We rise by <span className="text-gold">raising others.</span>
+            Raising a generation that <span className="text-gold">raises others.</span>
           </h1>
-          <p className="mt-4 text-lg font-medium text-forest/80">
-            Raising a generation that raises others.
-          </p>
           <p className="mt-5 max-w-xl text-base text-ink-soft">
             A God-centred foundation equipping young people across Nigeria and
             Africa — through faith, skills and financial competence — so every
