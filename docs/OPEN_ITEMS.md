@@ -13,6 +13,19 @@ Last updated: 2026-11-09 (Phase 0).
   corrected copy still follow the brief. The brief's **logo** and **imagery**
   rules still apply (approved SVG logos only; consented photography only).
 
+## Imagery placeholders — MUST swap before launch [CONFIRM]
+- **`public/photos/our-story.webp`** (Our Story section, shown across the three
+  cylindrical frames): owner-supplied **placeholder** (2026-11-13). This is a
+  **stock photo of identifiable children**, which CLAUDE.md forbids for launch
+  ("real African youth photography with documented consent only; no stock photos
+  of identifiable children"). Used now only so the owner can see the layout.
+  **Replace before go-live** with a consented IHF group photo (EXIF/GPS already
+  stripped on import; do the same for the replacement). The `photoSrc` prop on
+  `OurStory` makes the swap a one-line change.
+- **Hero portrait** (`HeroHope`, clipped into the Nigeria map): still a neutral
+  silhouette placeholder — awaiting a consented portrait (arms raised) via the
+  same `photoSrc` prop.
+
 ## Resolved by consultation (12 Nov 2026) — see docs/CONSULTATION.md
 - **Payments**: owner confirmed **multiple options** via a method selector —
   **Paystack** (Naira), **PayPal** (USD/GBP), **direct bank transfer**, extensible

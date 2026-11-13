@@ -52,7 +52,7 @@ export default function Home() {
       <HeroHope />
 
       {/* Our Story */}
-      <OurStory />
+      <OurStory photoSrc="/photos/our-story.webp" />
 
       {/* Our calling */}
       <Section tone="forest">
