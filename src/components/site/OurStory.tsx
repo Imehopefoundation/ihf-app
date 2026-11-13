@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 
-/** "Our Story" — a story quote beside a cluster of rounded photo placeholders.
- *  Images are consented photography only (CLAUDE.md); shown as placeholders. */
-export function OurStory() {
+const FRAME_W = 104;
+const GAP = 14;
+const FRAME_H = 300;
+const COMPOSITE_W = FRAME_W * 3 + GAP * 2;
+const FRAMES = [0, 1, 2].map((i) => i * (FRAME_W + GAP));
+
+/**
+ * "Our Story" — a story quote beside ONE photograph shown through three rounded
+ * windows (not three photos). `photoSrc` is a CONSENTED group photo of IHF
+ * members; until it arrives a warm placeholder makes the single-image effect
+ * visible. CLAUDE.md: consented photography only.
+ */
+export function OurStory({ photoSrc }: { photoSrc?: string }) {
   return (
     <section className="bg-white px-4 py-20">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
-          <h2 className="inline-block text-2xl font-semibold text-forest sm:text-3xl">
-            Our Story
-          </h2>
+          <h2 className="inline-block text-2xl font-semibold text-forest sm:text-3xl">Our Story</h2>
           <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-gold" />
         </div>
 
@@ -27,24 +35,61 @@ export function OurStory() {
             </Link>
           </div>
 
-          {/* staggered rounded photo placeholders */}
-          <div className="flex items-center justify-center gap-4 sm:gap-6">
-            {[
-              { h: "h-48 sm:h-60", mt: "" },
-              { h: "h-56 sm:h-72", mt: "mt-8" },
-              { h: "h-44 sm:h-56", mt: "mt-4" },
-            ].map((img, i) => (
-              <div
-                key={i}
-                className={`${img.mt} flex ${img.h} w-24 items-end justify-center overflow-hidden rounded-[2.5rem] border border-cream-200 bg-cream-100 sm:w-28`}
-                role="img"
-                aria-label="Consented photography to come"
-              >
-                <span className="pb-3 text-[10px] uppercase tracking-widest text-ink-soft/60">
-                  Photo
-                </span>
-              </div>
-            ))}
+          {/* one photograph shown through three rounded windows */}
+          <div className="mx-auto w-full max-w-[360px]">
+            <svg
+              viewBox={`0 0 ${COMPOSITE_W} ${FRAME_H}`}
+              className="h-auto w-full"
+              role="img"
+              aria-label="IHF members — a single consented photograph shown across three frames"
+            >
+              <defs>
+                <mask id="story-frames">
+                  <rect width={COMPOSITE_W} height={FRAME_H} fill="black" />
+                  {FRAMES.map((x) => (
+                    <rect key={x} x={x} y="0" width={FRAME_W} height={FRAME_H} rx="30" fill="white" />
+                  ))}
+                </mask>
+                <linearGradient id="story-fill" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#12664E" />
+                  <stop offset="1" stopColor="#C2912F" />
+                </linearGradient>
+              </defs>
+
+              {photoSrc ? (
+                <image
+                  href={photoSrc}
+                  x="0"
+                  y="0"
+                  width={COMPOSITE_W}
+                  height={FRAME_H}
+                  preserveAspectRatio="xMidYMid slice"
+                  mask="url(#story-frames)"
+                />
+              ) : (
+                <rect width={COMPOSITE_W} height={FRAME_H} fill="url(#story-fill)" mask="url(#story-frames)" />
+              )}
+
+              {/* frame outlines */}
+              {FRAMES.map((x) => (
+                <rect
+                  key={x}
+                  x={x + 0.75}
+                  y="0.75"
+                  width={FRAME_W - 1.5}
+                  height={FRAME_H - 1.5}
+                  rx="30"
+                  fill="none"
+                  stroke="var(--color-cream-200)"
+                  strokeWidth="1.5"
+                />
+              ))}
+            </svg>
+            {!photoSrc && (
+              <p className="mt-2 text-center text-[11px] uppercase tracking-widest text-ink-soft/70">
+                One group photo (consented) — shown across all three frames
+              </p>
+            )}
           </div>
         </div>
       </div>
