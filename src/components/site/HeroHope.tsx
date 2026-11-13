@@ -57,9 +57,10 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
               {/* dark base so the continent reads even where nothing covers it */}
               <rect x="0" y="0" width="600" height="674" fill="url(#africa-fill)" />
               {photoSrc && (
-                // the boy's photo fills the continent; panned right (x offset) so he
-                // sits inside the frame and the full "I HAVE HOPE" shirt is clear
-                <image href={photoSrc} x="-250" y="0" width="1235" height="674" preserveAspectRatio="xMidYMid slice" />
+                // the boy's photo fills the continent; panned so HE is centred on the
+                // widest part of Africa — face, "I HAVE HOPE" shirt, a bit of both
+                // raised arms, and the local street behind him all sit in frame
+                <image href={photoSrc} x="-300" y="0" width="1235" height="674" preserveAspectRatio="xMidYMid slice" />
               )}
             </g>
             <path d={AFRICA_PATH} fill="none" stroke="var(--color-gold)" strokeWidth="2.5" opacity="0.5" />
