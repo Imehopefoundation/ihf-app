@@ -1,10 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { validate, z, personName, boundedString } from "@/lib/validation";
-import { createGuardian, addChild, getGuardian } from "@/lib/data/applications";
+import {
+  createGuardian,
+  addChild,
+  getGuardian,
+  createApplication,
+  recordConsent,
+  type ConsentType,
+} from "@/lib/data/applications";
+import { isProgramme } from "@/lib/content/programmes";
+import { CURRENT_POLICY_VERSION } from "@/lib/content/policy";
 import { logger } from "@/lib/logging/logger";
+
+const uuid = z.string().uuid();
 
 export interface FlowState {
   status: "idle" | "error" | "success";
@@ -102,4 +114,63 @@ export async function addChildAction(_prev: FlowState, formData: FormData): Prom
   }
   revalidatePath("/app/apply");
   return { status: "success" };
+}
+
+/**
+ * Submit an application for one of the guardian's children. RLS
+ * (applications_insert_own) guarantees the child belongs to this guardian.
+ */
+export async function createApplicationAction(formData: FormData): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in");
+
+  const guardian = await getGuardian(supabase);
+  if (!guardian) redirect("/app/apply");
+
+  const childId = String(formData.get("childId") ?? "");
+  const programme = String(formData.get("programme") ?? "");
+  if (!uuid.safeParse(childId).success || !isProgramme(programme)) redirect("/app/apply");
+
+  let id: string;
+  try {
+    id = await createApplication(supabase, childId, programme);
+    logger.info("application_created", {});
+  } catch (e) {
+    logger.error("application_create_failed", { code: (e as { code?: string }).code });
+    redirect("/app/apply");
+  }
+  redirect(`/app/apply/${id}`);
+}
+
+/**
+ * Record one of the two required consents (biological / spiritual guardian)
+ * against an application, with the current policy version and a timestamp.
+ */
+export async function recordConsentAction(formData: FormData): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in");
+
+  const guardian = await getGuardian(supabase);
+  if (!guardian) redirect("/app/apply");
+
+  const applicationId = String(formData.get("applicationId") ?? "");
+  const consentType = String(formData.get("consentType") ?? "") as ConsentType;
+  const agreed = formData.get("agree") === "on";
+  const validType = consentType === "biological_parent" || consentType === "spiritual_parent";
+
+  if (uuid.safeParse(applicationId).success && validType && agreed) {
+    try {
+      await recordConsent(supabase, applicationId, guardian.id, consentType, CURRENT_POLICY_VERSION);
+      logger.info("consent_recorded", { type: consentType });
+    } catch (e) {
+      logger.error("consent_failed", { code: (e as { code?: string }).code });
+    }
+  }
+  revalidatePath(`/app/apply/${applicationId}`);
 }

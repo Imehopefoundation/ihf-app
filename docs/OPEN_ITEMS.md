@@ -92,12 +92,23 @@ migration grants explicitly and the local RLS harness no longer masks this
 (tests now fail if a grant is missing — matching production).
 
 ### Phase 3 (Applications) — built vs pending
-Built & RLS-tested now: the data model (guardians, children, applications,
-consents), field-level encryption (`crypto.ts`), and the IHF Letter PDF
-generator — all tested against local Postgres / unit tests. Pending the live
-project (auth-gated): guardian registration & add-child UI, the dual-consent
-flow, the "paired with the right mentor" status flow with email/in-app
-notifications, and wiring staff record-views to `log_record_view`.
+Built now (in the LMS at `/app/apply` and `/app/review`): guardian registration
+& add-child, **submit application** (per child, per programme), **dual consent**
+capture (biological + spiritual, each stamped with date + policy version),
+**IHF Letter PDF** download (RLS-authorised route, requires both consents), and a
+**staff review queue** that moves applications through the status lifecycle and
+records the action via `log_record_view`. Data model, RLS, field-level
+encryption and the PDF generator were already built & tested.
+
+Pending: email/in-app notifications on status changes ("paired with the right
+mentor"); a staff **application detail** view that reveals child identity (must
+log `record_view` on open); re-acknowledgement when the policy version changes.
+
+- **[CONFIRM] Policy version** — consents are stamped with
+  `CURRENT_POLICY_VERSION` (currently `"2026.1-draft"` in
+  `src/lib/content/policy.ts`). Confirm the real versioning scheme and the first
+  published Organisational Policy & Code of Conduct version.
+- **[VERIFY] Pass mark 60%** — still to confirm (assessments, later phase).
 
 ## Technical follow-ups (see docs/SECURITY.md)
 - Static caching for public pages: all routes are currently dynamically rendered

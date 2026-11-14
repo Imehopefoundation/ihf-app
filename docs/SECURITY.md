@@ -31,6 +31,19 @@ The app is one Next.js codebase split into two experiences:
    `user_roles`.
 4. **RLS** — the real data boundary; the above only decide what to render/route.
 
+**Application flow specifics:**
+- **IHF Letter PDF** (`/app/apply/[id]/letter`) — authorised purely by RLS:
+  `getApplication` only returns a row the caller may see (owning guardian or
+  staff). Requires both consents on file, else `403`. All inserted values are
+  escaped and length-limited in `generateIhfLetter`; served `no-store`.
+- **Staff review** (`/app/review`) — `requireRole(['programme_lead',
+  'quality_assurance'])` + RLS `applications_update_staff`. The list is
+  **data-minimised**: it shows reference, age group, programme and status only —
+  no decrypted child/guardian identity. Each status change records an append-only
+  `log_record_view('applications', id)`.
+- **Consent** — stamped with `CURRENT_POLICY_VERSION` + timestamp;
+  `consents_insert_own` RLS ties each to the owning guardian's own application.
+
 ---
 
 ## 1. Threat model

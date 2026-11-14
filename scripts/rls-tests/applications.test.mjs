@@ -112,3 +112,55 @@ describe("staff access and status changes", () => {
     );
   });
 });
+
+describe("guardian writes (create application + record consent)", () => {
+  let newApp;
+
+  test("a guardian can create an application for their own child", async () => {
+    const r = await asUser(db, { sub: USER_A }, (c) =>
+      c.query(
+        "insert into public.applications (child_id, programme) values ($1,'Education & Scholarships') returning id",
+        [childA],
+      ),
+    );
+    assert.equal(r.rowCount, 1);
+    newApp = r.rows[0].id;
+  });
+
+  test("a guardian cannot create an application for another's child (IDOR blocked)", async () => {
+    await assert.rejects(
+      () =>
+        asUser(db, { sub: USER_A }, (c) =>
+          c.query("insert into public.applications (child_id, programme) values ($1,'Skills Development')", [
+            childB,
+          ]),
+        ),
+      /row-level security/i,
+    );
+  });
+
+  test("a guardian can record a consent on their own application", async () => {
+    const r = await asUser(db, { sub: USER_A }, (c) =>
+      c.query(
+        `insert into public.consents (application_id, consent_type, granted_by_guardian, policy_version)
+         values ($1,'biological_parent',$2,'2026.1-draft') returning id`,
+        [newApp, gA],
+      ),
+    );
+    assert.equal(r.rowCount, 1);
+  });
+
+  test("a guardian cannot record a consent on another's application", async () => {
+    await assert.rejects(
+      () =>
+        asUser(db, { sub: USER_A }, (c) =>
+          c.query(
+            `insert into public.consents (application_id, consent_type, granted_by_guardian, policy_version)
+             values ($1,'biological_parent',$2,'x')`,
+            [appB, gA],
+          ),
+        ),
+      /row-level security/i,
+    );
+  });
+});
