@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { publicEnv } from "@/lib/env";
 import { validate, z, email } from "@/lib/validation";
+import { verifyInviteToken } from "@/lib/security/invite";
 import { defaultRateLimiter, RATE_LIMITS } from "@/lib/security/rate-limit";
 import { logger } from "@/lib/logging/logger";
 
@@ -65,12 +66,22 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
   if (await rateLimited("signup")) {
     return { status: "error", message: "Too many attempts. Please wait a minute and try again." };
   }
-  const parsed = validate(credsSchema, {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-  if (!parsed.success) {
-    return { status: "error", message: "Enter a valid email and a password of at least 8 characters." };
+
+  // Registration is BY INVITATION ONLY. A valid, unexpired, signed invite token
+  // is required, and the account email is taken from the token — never from the
+  // client — so an invite can only ever create the invited address.
+  const token = typeof formData.get("token") === "string" ? String(formData.get("token")) : "";
+  const invite = verifyInviteToken(token);
+  if (!invite) {
+    return {
+      status: "error",
+      message: "This invitation link is invalid or has expired. Please ask IHF for a new one.",
+    };
+  }
+
+  const password = String(formData.get("password") ?? "");
+  if (!z.string().min(8).max(200).safeParse(password).success) {
+    return { status: "error", message: "Choose a password of at least 8 characters." };
   }
 
   let hasSession = false;
@@ -78,14 +89,18 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
     const supabase = await createClient();
     const origin = publicEnv().NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     const { data, error } = await supabase.auth.signUp({
-      email: parsed.data.email,
-      password: parsed.data.password,
+      email: invite.email, // bound to the invited address
+      password,
       options: { emailRedirectTo: `${origin}/confirm` },
     });
     if (error) {
       logger.warn("signup_failed", { code: error.status });
-      // Still generic to avoid revealing whether the email is registered.
-      return { status: "check-email", message: "Check your email to confirm your account." };
+      // The invited email is already registered (invites are single-use), or
+      // another error occurred. Point them to sign-in.
+      return {
+        status: "error",
+        message: "That invitation has already been used. Try signing in instead.",
+      };
     }
     hasSession = Boolean(data.session);
   } catch {
@@ -94,7 +109,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
   logger.info("signup_ok", {});
   // Email confirmation disabled -> already signed in. Otherwise, confirm first.
   if (hasSession) redirect("/app");
-  return { status: "check-email", message: "Check your email to confirm your account." };
+  return { status: "check-email", message: "Check your email to confirm your account, then sign in." };
 }
 
 export async function signOut(): Promise<void> {

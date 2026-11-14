@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const MENTEE_STEPS = [
-  { n: "01", title: "Create your account", body: "Sign up with your email so you can save progress and return at any time." },
+  { n: "01", title: "Receive your invitation", body: "Registration is by invitation only. When a place is available, IHF emails you a secure, single-use link to set up your account." },
   { n: "02", title: "Intake form", body: "Tell us about yourself, your background and what you hope to grow in." },
   { n: "03", title: "Choose the age group", body: "6–11 (a parent or guardian applies and manages everything) or 12–16 (a supervised teen account with parental consent)." },
   { n: "04", title: "Consent", body: "Consent is given by both the biological and the spiritual parent or guardian, and recorded with the policy version." },
@@ -20,7 +20,7 @@ const MENTEE_STEPS = [
 
 const MENTOR_STEPS = [
   "Enter a valid invitation code",
-  "Create your account and profile",
+  "Set up your account from your invitation link and complete your profile",
   "Share your skill area and years of experience",
   "Provide a statement of faith commitment",
   "Give two references",

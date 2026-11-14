@@ -51,5 +51,11 @@ export const LMS_NAV: readonly LmsNavItem[] = [
     roles: ["finance"],
     blurb: "Giving records and reconciliation (private).",
   },
+  {
+    href: "/app/invitations",
+    label: "Invitations",
+    roles: ["admin"],
+    blurb: "Invite new members by email (invitation-only registration).",
+  },
   { href: "/app/account", label: "Account", blurb: "Your details, roles and sign-out." },
 ];

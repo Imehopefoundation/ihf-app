@@ -44,6 +44,26 @@ The app is one Next.js codebase split into two experiences:
 - **Consent** — stamped with `CURRENT_POLICY_VERSION` + timestamp;
   `consents_insert_own` RLS ties each to the owning guardian's own application.
 
+**Registration is by invitation only; the website exposes no auth:**
+- The public **Website** links to no sign-in or sign-up anywhere (header, footer,
+  pages). The LMS sign-in lives at `/sign-in`, reached only by going to `/app`
+  (gate redirect) or directly — it is not advertised on the site.
+- **Open sign-up is removed.** `/sign-up` is an "invitation only" notice with no
+  form. The `signUp` server action refuses unless it carries a valid signed
+  **invite token**, and takes the account email **from the token**, never from
+  the client — so an invite can only create the invited address.
+- **Invite tokens** (`src/lib/security/invite.ts`): HMAC-signed, email-bound,
+  7-day expiry. The signing key is derived (domain-separated) from
+  `FIELD_ENCRYPTION_KEY`, so no new secret is stored. Single-use is enforced by
+  email binding: once the invited email registers, re-use fails ("already
+  registered"). Admins mint links at `/app/invitations` (role-gated).
+- **Residual risk / hardening [see OPEN_ITEMS]:** because Supabase's public
+  signup endpoint stays enabled (so invited users can self-serve with the anon
+  key), a determined actor could call `auth.signUp` directly, bypassing the UI
+  gate. Closing this fully needs the **service_role** key: disable public signups
+  in Supabase and switch to admin invites (`auth.admin.inviteUserByEmail`) +
+  Resend email delivery. Until then the product is invite-only at the app layer.
+
 ---
 
 ## 1. Threat model

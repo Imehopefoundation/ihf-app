@@ -1,14 +1,28 @@
 "use client";
 
 import { useActionState } from "react";
-import Link from "next/link";
 import { signIn, signUp, type AuthState } from "./actions";
 import { Field, Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 
 const initial: AuthState = { status: "idle" };
 
-export function CredentialsForm({ mode, next }: { mode: "signin" | "signup"; next?: string }) {
+/**
+ * Sign-in, and invitation-only sign-up. In "signup" mode the form carries the
+ * signed invite `token` and shows the invited email read-only — the account
+ * email comes from the token server-side, never from this field.
+ */
+export function CredentialsForm({
+  mode,
+  next,
+  token,
+  lockedEmail,
+}: {
+  mode: "signin" | "signup";
+  next?: string;
+  token?: string;
+  lockedEmail?: string;
+}) {
   const action = mode === "signin" ? signIn : signUp;
   const [state, formAction, pending] = useActionState(action, initial);
 
@@ -23,19 +37,27 @@ export function CredentialsForm({ mode, next }: { mode: "signin" | "signup"; nex
   return (
     <form action={formAction} className="space-y-4" noValidate>
       {mode === "signin" && next && <input type="hidden" name="next" value={next} />}
+      {mode === "signup" && token && <input type="hidden" name="token" value={token} />}
+
       {state.status === "error" && state.message && (
         <p role="alert" className="rounded-[var(--radius)] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-800">
           {state.message}
         </p>
       )}
-      <Field label="Email address" required>
-        {({ id }) => <Input id={id} name="email" type="email" autoComplete="email" required />}
-      </Field>
-      <Field
-        label="Password"
-        required
-        hint={mode === "signup" ? "At least 8 characters." : undefined}
-      >
+
+      {mode === "signup" ? (
+        <Field label="Email address" hint="Your account is created for this invited address.">
+          {({ id, describedBy }) => (
+            <Input id={id} value={lockedEmail ?? ""} readOnly aria-describedby={describedBy} />
+          )}
+        </Field>
+      ) : (
+        <Field label="Email address" required>
+          {({ id }) => <Input id={id} name="email" type="email" autoComplete="email" required />}
+        </Field>
+      )}
+
+      <Field label="Password" required hint={mode === "signup" ? "At least 8 characters." : undefined}>
         {({ id, describedBy }) => (
           <Input
             id={id}
@@ -48,26 +70,10 @@ export function CredentialsForm({ mode, next }: { mode: "signin" | "signup"; nex
           />
         )}
       </Field>
+
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Please wait…" : mode === "signin" ? "Log in" : "Create account"}
       </Button>
-      <p className="text-center text-sm text-ink-soft">
-        {mode === "signin" ? (
-          <>
-            New to IHF?{" "}
-            <Link href="/sign-up" className="font-semibold text-forest hover:underline">
-              Create an account
-            </Link>
-          </>
-        ) : (
-          <>
-            Already have an account?{" "}
-            <Link href="/sign-in" className="font-semibold text-forest hover:underline">
-              Log in
-            </Link>
-          </>
-        )}
-      </p>
     </form>
   );
 }

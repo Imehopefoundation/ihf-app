@@ -12,7 +12,7 @@
  *
  * This is server-only; it must never be bundled for the browser.
  */
-import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHmac, randomBytes } from "node:crypto";
 
 if (typeof window !== "undefined") {
   throw new Error("crypto helpers are server-only and must not run in the browser.");
@@ -45,6 +45,15 @@ function key(): Buffer {
 /** For tests: inject a key directly. */
 export function _setKeyForTest(buf: Buffer): void {
   cachedKey = buf;
+}
+
+/**
+ * Derive a purpose-specific 32-byte subkey from the master key via HMAC with a
+ * domain-separation label, so other secrets (e.g. invite-link signing) never
+ * use the raw encryption key directly.
+ */
+export function deriveSubkey(info: string): Buffer {
+  return createHmac("sha256", key()).update(info).digest();
 }
 
 /**

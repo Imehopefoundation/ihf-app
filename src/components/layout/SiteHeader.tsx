@@ -38,11 +38,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/sign-in" className={buttonClasses("ghost", "sm")}>
-            Log in
-          </Link>
           <Link href="/join" className={buttonClasses("primary", "sm")}>
-            Apply
+            Join us
           </Link>
         </div>
 
@@ -77,20 +74,13 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex gap-3">
-            <Link
-              href="/sign-in"
-              onClick={() => setOpen(false)}
-              className={cn(buttonClasses("secondary", "md"), "flex-1")}
-            >
-              Log in
-            </Link>
+          <div className="mt-3">
             <Link
               href="/join"
               onClick={() => setOpen(false)}
-              className={cn(buttonClasses("primary", "md"), "flex-1")}
+              className={cn(buttonClasses("primary", "md"), "w-full")}
             >
-              Apply
+              Join us
             </Link>
           </div>
         </nav>

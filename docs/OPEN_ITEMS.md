@@ -110,6 +110,24 @@ log `record_view` on open); re-acknowledgement when the policy version changes.
   published Organisational Policy & Code of Conduct version.
 - **[VERIFY] Pass mark 60%** — still to confirm (assessments, later phase).
 
+## Invitation-only registration — hardening & setup
+- **Website shows no auth** (no sign-in/sign-up links); registration is by signed,
+  email-bound, expiring **invite link** (`/invite/[token]`), minted by admins at
+  `/app/invitations`. Works now with no migration and no new secret (signing key
+  derived from `FIELD_ENCRYPTION_KEY`).
+- **First admin [ACTION]** — invite creation is admin-only, so seed the first
+  admin role once in the Supabase SQL editor:
+  `insert into public.user_roles (user_id, role) values ('<auth-user-uuid>', 'admin');`
+- **Airtight invite-only [CONFIRM/needs service_role]** — to stop direct
+  `auth.signUp` calls bypassing the UI: set `SUPABASE_SERVICE_ROLE_KEY`, disable
+  "Allow new users to sign up" in Supabase Auth, and switch to
+  `auth.admin.inviteUserByEmail`. (See docs/SECURITY.md "Residual risk".)
+- **Email delivery** — invite links are copy-to-send today; wire **Resend** to
+  email them automatically (needs Resend API key + SPF/DKIM/DMARC).
+- **Role assignment** — invited users register as plain members; staff-role
+  granting is a separate admin feature (needs a SECURITY DEFINER grant function
+  or service_role), still to build.
+
 ## Technical follow-ups (see docs/SECURITY.md)
 - Static caching for public pages: all routes are currently dynamically rendered
   so the strict nonce CSP applies. Reintroduce static/edge caching for public
