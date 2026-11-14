@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getGuardian, listChildren } from "@/lib/data/applications";
-import { Section, Eyebrow, SectionTitle, Lead } from "@/components/site/primitives";
+import { Eyebrow, SectionTitle, Lead } from "@/components/site/primitives";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/Table";
 import { GuardianForm, AddChildForm } from "./ApplyForms";
@@ -14,13 +14,13 @@ export default async function ApplyPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/auth");
+  if (!user) redirect("/sign-in");
 
   const guardian = await getGuardian(supabase);
   const children = guardian ? await listChildren(supabase) : [];
 
   return (
-    <Section tone="cream" className="pt-16">
+    <div className="mx-auto max-w-5xl">
       <Eyebrow>Apply</Eyebrow>
       <SectionTitle>{guardian ? `Welcome, ${guardian.fullName}` : "Register as a parent or guardian"}</SectionTitle>
       <Lead>
@@ -68,6 +68,6 @@ export default async function ApplyPage() {
           </div>
         </div>
       </div>
-    </Section>
+    </div>
   );
 }

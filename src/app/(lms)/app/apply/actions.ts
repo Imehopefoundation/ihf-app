@@ -68,7 +68,7 @@ export async function registerGuardian(_prev: FlowState, formData: FormData): Pr
     logger.error("guardian_register_failed", { code: (e as { code?: string }).code });
     return { status: "error", message: "We couldn't save that. Please try again." };
   }
-  revalidatePath("/apply");
+  revalidatePath("/app/apply");
   return { status: "success" };
 }
 
@@ -100,6 +100,6 @@ export async function addChildAction(_prev: FlowState, formData: FormData): Prom
     logger.error("child_add_failed", { code: (e as { code?: string }).code });
     return { status: "error", message: "We couldn't save that. Please try again." };
   }
-  revalidatePath("/apply");
+  revalidatePath("/app/apply");
   return { status: "success" };
 }

@@ -1,39 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { Section } from "@/components/site/primitives";
+import { requireSessionUser } from "@/lib/auth/session";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { Button } from "@/components/ui/Button";
-import { signOut } from "../auth/actions";
+import { signOut } from "@/app/(auth)/actions";
 
 export const metadata: Metadata = { title: "Your account" };
 
 export default async function AccountPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/auth");
-
-  const { data: roles } = await supabase.from("user_roles").select("role");
+  const { user, roles } = await requireSessionUser("/app/account");
 
   return (
-    <Section tone="cream" className="pt-16">
-      <div className="mx-auto max-w-xl rounded-[var(--radius-lg)] border border-cream-200 bg-white p-8">
-        <h1 className="text-2xl font-semibold text-forest">Your account</h1>
+    <div className="mx-auto max-w-xl">
+      <div className="rounded-[var(--radius-lg)] border border-cream-200 bg-white p-8">
+        <h1 className="text-2xl font-semibold text-ink">Your account</h1>
         <dl className="mt-6 space-y-4 text-sm">
           <div>
             <dt className="font-medium text-ink-soft">Signed in as</dt>
-            <dd className="text-ink">{user.email}</dd>
+            <dd className="break-words text-ink">{user.email}</dd>
           </div>
           <div>
             <dt className="font-medium text-ink-soft">Roles</dt>
             <dd className="mt-1 flex flex-wrap gap-2">
-              {roles && roles.length > 0 ? (
+              {roles.length > 0 ? (
                 roles.map((r) => (
-                  <StatusChip key={r.role} tone="info">
-                    {String(r.role).replace(/_/g, " ")}
+                  <StatusChip key={r} tone="info">
+                    {r.replace(/_/g, " ")}
                   </StatusChip>
                 ))
               ) : (
@@ -43,7 +35,7 @@ export default async function AccountPage() {
           </div>
         </dl>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link href="/apply" className="text-sm font-semibold text-forest hover:underline">
+          <Link href="/app/apply" className="text-sm font-semibold text-forest hover:underline">
             Start or continue an application →
           </Link>
         </div>
@@ -53,6 +45,6 @@ export default async function AccountPage() {
           </Button>
         </form>
       </div>
-    </Section>
+    </div>
   );
 }

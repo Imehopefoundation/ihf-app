@@ -18,6 +18,28 @@ export function proxy(request: NextRequest) {
 
   const headers = buildSecurityHeaders({ nonce, isDev });
 
+  // LMS auth gate (defence in depth). This is a fast cookie-presence check only
+  // — the authoritative checks are the LMS layout's getUser() (Node runtime) and
+  // RLS. We deliberately avoid a Supabase network call in the edge proxy so the
+  // gate never depends on edge-runtime egress. A present-but-invalid cookie is
+  // still caught server-side and sent back here on the next request.
+  const path = request.nextUrl.pathname;
+  const isLms = path === "/app" || path.startsWith("/app/");
+  if (isLms) {
+    const hasAuthCookie = request.cookies
+      .getAll()
+      .some((c) => /^sb-.*-auth-token(\.\d+)?$/.test(c.name));
+    if (!hasAuthCookie) {
+      const signInUrl = new URL("/sign-in", request.url);
+      signInUrl.searchParams.set("next", path);
+      const redirect = NextResponse.redirect(signInUrl);
+      for (const [name, value] of Object.entries(headers)) {
+        redirect.headers.set(name, value);
+      }
+      return redirect;
+    }
+  }
+
   // Forward the nonce (and CSP) to the app via request headers so Server
   // Components can read the nonce and Next can nonce its injected scripts.
   const requestHeaders = new Headers(request.headers);

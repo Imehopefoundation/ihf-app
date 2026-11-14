@@ -38,7 +38,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/auth" className={buttonClasses("ghost", "sm")}>
+          <Link href="/sign-in" className={buttonClasses("ghost", "sm")}>
             Log in
           </Link>
           <Link href="/join" className={buttonClasses("primary", "sm")}>
@@ -79,7 +79,7 @@ export function SiteHeader() {
           </ul>
           <div className="mt-3 flex gap-3">
             <Link
-              href="/auth"
+              href="/sign-in"
               onClick={() => setOpen(false)}
               className={cn(buttonClasses("secondary", "md"), "flex-1")}
             >

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 
 const initial: AuthState = { status: "idle" };
 
-export function CredentialsForm({ mode }: { mode: "signin" | "signup" }) {
+export function CredentialsForm({ mode, next }: { mode: "signin" | "signup"; next?: string }) {
   const action = mode === "signin" ? signIn : signUp;
   const [state, formAction, pending] = useActionState(action, initial);
 
@@ -22,6 +22,7 @@ export function CredentialsForm({ mode }: { mode: "signin" | "signup" }) {
 
   return (
     <form action={formAction} className="space-y-4" noValidate>
+      {mode === "signin" && next && <input type="hidden" name="next" value={next} />}
       {state.status === "error" && state.message && (
         <p role="alert" className="rounded-[var(--radius)] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-800">
           {state.message}
@@ -54,14 +55,14 @@ export function CredentialsForm({ mode }: { mode: "signin" | "signup" }) {
         {mode === "signin" ? (
           <>
             New to IHF?{" "}
-            <Link href="/auth/sign-up" className="font-semibold text-forest hover:underline">
+            <Link href="/sign-up" className="font-semibold text-forest hover:underline">
               Create an account
             </Link>
           </>
         ) : (
           <>
             Already have an account?{" "}
-            <Link href="/auth" className="font-semibold text-forest hover:underline">
+            <Link href="/sign-in" className="font-semibold text-forest hover:underline">
               Log in
             </Link>
           </>

@@ -52,7 +52,13 @@ export async function signIn(_prev: AuthState, formData: FormData): Promise<Auth
     return { status: "error", message: "Sign-in is temporarily unavailable. Please try again soon." };
   }
   logger.info("signin_ok", {});
-  redirect("/account");
+  redirect(safeNext(formData.get("next")));
+}
+
+/** Only allow redirecting back into the LMS, never to an arbitrary URL. */
+function safeNext(value: FormDataEntryValue | null): string {
+  const next = typeof value === "string" ? value : "";
+  return next === "/app" || next.startsWith("/app/") ? next : "/app";
 }
 
 export async function signUp(_prev: AuthState, formData: FormData): Promise<AuthState> {
@@ -74,7 +80,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
     const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
-      options: { emailRedirectTo: `${origin}/auth/confirm` },
+      options: { emailRedirectTo: `${origin}/confirm` },
     });
     if (error) {
       logger.warn("signup_failed", { code: error.status });
@@ -87,7 +93,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
   }
   logger.info("signup_ok", {});
   // Email confirmation disabled -> already signed in. Otherwise, confirm first.
-  if (hasSession) redirect("/account");
+  if (hasSession) redirect("/app");
   return { status: "check-email", message: "Check your email to confirm your account." };
 }
 
@@ -98,5 +104,5 @@ export async function signOut(): Promise<void> {
   } catch {
     // ignore — we redirect regardless
   }
-  redirect("/auth");
+  redirect("/sign-in");
 }

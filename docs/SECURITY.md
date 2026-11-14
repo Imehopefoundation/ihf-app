@@ -5,7 +5,31 @@ Living security document (CLAUDE.md requires it to be kept current). Standard:
 No app is "unhackable"; every rule below is enforced by tests/CI and reviewed
 before launch.
 
-Last updated: 2026-11-09 (Phase 0 — security baseline).
+Last updated: 2026-11-14 (Website/LMS split + LMS auth gate).
+
+---
+
+## 0. App shape & access boundary (Website vs LMS)
+
+The app is one Next.js codebase split into two experiences:
+
+- **Website** — public marketing/info pages at `/` (`src/app/(site)`), indexable.
+- **LMS** — authenticated app at `/app` (`src/app/(lms)/app`), `noindex`.
+- **Auth gateway** — `/sign-in`, `/sign-up`, `/confirm` (`src/app/(auth)`), `noindex`.
+
+**LMS access is enforced in depth, never UI-only:**
+1. **Edge proxy** (`src/proxy.ts`) — a *fast, non-authoritative* cookie-presence
+   check on `/app/*`: if no Supabase auth cookie is present, redirect to
+   `/sign-in?next=…`. Deliberately does **no** network/Supabase call at the edge
+   (so the gate never depends on edge-runtime egress). A present-but-invalid
+   cookie is caught by step 2.
+2. **LMS layout** (`src/app/(lms)/app/layout.tsx`) — the authoritative check:
+   `getUser()` in the Node runtime via the user-scoped Supabase client; no user ⇒
+   redirect to `/sign-in`.
+3. **Per-page role checks** — `requireRole([...])` in `src/lib/auth/session.ts`
+   on each role-specific section (admin always allowed); roles read from
+   `user_roles`.
+4. **RLS** — the real data boundary; the above only decide what to render/route.
 
 ---
 
