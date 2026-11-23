@@ -100,11 +100,11 @@ export default function ProgrammesPage() {
       <Section tone="forest" className="text-center">
         <SectionTitle onDark>Ready to begin?</SectionTitle>
         <Lead onDark className="mx-auto">
-          Applications open by a short intake form. Mentors join by invitation.
+          To take part, or to mentor by invitation, speak with our team.
         </Lead>
         <div className="mt-8 flex justify-center gap-3">
-          <a href="/join" className="rounded-[var(--radius)] bg-cream px-6 py-3 text-sm font-medium text-forest hover:bg-white">
-            Join Us
+          <a href="/contact" className="rounded-[var(--radius)] bg-cream px-6 py-3 text-sm font-medium text-forest hover:bg-white">
+            Get in touch
           </a>
         </div>
       </Section>

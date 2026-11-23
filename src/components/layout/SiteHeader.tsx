@@ -10,7 +10,6 @@ const NAV = [
   { href: "/about", label: "About IHF" },
   { href: "/programmes", label: "Programmes" },
   { href: "/impact", label: "Our Impact" },
-  { href: "/join", label: "Join Us" },
   { href: "/give", label: "Give" },
   { href: "/contact", label: "Contact" },
 ];
@@ -38,8 +37,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/join" className={buttonClasses("primary", "sm")}>
-            Join us
+          <Link href="/give" className={buttonClasses("give", "sm")}>
+            Give
           </Link>
         </div>
 
@@ -76,11 +75,11 @@ export function SiteHeader() {
           </ul>
           <div className="mt-3">
             <Link
-              href="/join"
+              href="/give"
               onClick={() => setOpen(false)}
-              className={cn(buttonClasses("primary", "md"), "w-full")}
+              className={cn(buttonClasses("give", "md"), "w-full")}
             >
-              Join us
+              Give
             </Link>
           </div>
         </nav>

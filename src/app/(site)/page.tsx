@@ -31,7 +31,7 @@ const PROGRAMMES = [
 ];
 
 const CYCLE = [
-  { n: "01", title: "Apply", body: "Begin with a short intake form so we can understand your story and your hopes." },
+  { n: "01", title: "Get connected", body: "Reach out to IHF so we can understand your story and your hopes." },
   { n: "02", title: "Be mentored", body: "You are paired with the right mentor and walk together in faith, accountability and care." },
   { n: "03", title: "Grow in skill and character", body: "Train in a real skill, keep an Impact Journal and discover your purpose." },
   { n: "04", title: "Serve others", body: "Put your gifts to work in your family, church and community." },
@@ -39,8 +39,8 @@ const CYCLE = [
 ];
 
 const INVITATIONS = [
-  { title: "Mentees", body: "Grow in faith, skill and purpose.", cta: "Apply", href: "/join" },
-  { title: "Mentors", body: "Serve by invitation and multiply your gifts.", cta: "Mentor pathway", href: "/join" },
+  { title: "Mentees", body: "Grow in faith, skill and purpose.", cta: "Get in touch", href: "/contact" },
+  { title: "Mentors", body: "Serve by invitation and multiply your gifts.", cta: "Get in touch", href: "/contact" },
   { title: "Supporters", body: "Give quietly, as an act of stewardship.", cta: "Give", href: "/give" },
   { title: "Partners", body: "Churches, schools and organisations.", cta: "Start a conversation", href: "/contact" },
 ];

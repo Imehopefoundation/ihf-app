@@ -24,11 +24,11 @@ export function HeroHope({ photoSrc }: { photoSrc?: string }) {
             life changed goes on to change another.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/join" className={buttonClasses("primary", "lg")}>
-              Apply as a mentee
-            </Link>
             <Link href="/give" className={buttonClasses("give", "lg")}>
               ♥ Give to the movement
+            </Link>
+            <Link href="/contact" className={buttonClasses("secondary", "lg")}>
+              Get in touch
             </Link>
           </div>
         </div>

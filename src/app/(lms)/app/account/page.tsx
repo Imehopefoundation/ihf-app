@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/session";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { Button } from "@/components/ui/Button";
@@ -34,12 +33,7 @@ export default async function AccountPage() {
             </dd>
           </div>
         </dl>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link href="/app/apply" className="text-sm font-semibold text-forest hover:underline">
-            Start or continue an application →
-          </Link>
-        </div>
-        <form action={signOut} className="mt-6">
+        <form action={signOut} className="mt-8">
           <Button type="submit" variant="secondary">
             Sign out
           </Button>

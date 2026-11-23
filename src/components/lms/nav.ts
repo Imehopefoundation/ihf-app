@@ -17,11 +17,6 @@ export interface LmsNavItem {
 export const LMS_NAV: readonly LmsNavItem[] = [
   { href: "/app", label: "Dashboard", blurb: "Your overview and next steps." },
   {
-    href: "/app/apply",
-    label: "Applications",
-    blurb: "Register as a parent or guardian and apply on behalf of a child.",
-  },
-  {
     href: "/app/learning",
     label: "My learning",
     roles: ["mentee"],
@@ -32,12 +27,6 @@ export const LMS_NAV: readonly LmsNavItem[] = [
     label: "Mentoring",
     roles: ["mentor"],
     blurb: "Your mentees, session records and assessments.",
-  },
-  {
-    href: "/app/review",
-    label: "Review queue",
-    roles: ["programme_lead", "quality_assurance"],
-    blurb: "Applications and assessments awaiting review.",
   },
   {
     href: "/app/safeguarding",

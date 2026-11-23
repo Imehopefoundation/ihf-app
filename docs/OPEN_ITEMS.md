@@ -91,24 +91,17 @@ Supabase does **not** auto-grant table privileges on SQL-created tables, so ever
 migration grants explicitly and the local RLS harness no longer masks this
 (tests now fail if a grant is missing — matching production).
 
-### Phase 3 (Applications) — built vs pending
-Built now (in the LMS at `/app/apply` and `/app/review`): guardian registration
-& add-child, **submit application** (per child, per programme), **dual consent**
-capture (biological + spiritual, each stamped with date + policy version),
-**IHF Letter PDF** download (RLS-authorised route, requires both consents), and a
-**staff review queue** that moves applications through the status lifecycle and
-records the action via `log_record_view`. Data model, RLS, field-level
-encryption and the PDF generator were already built & tested.
-
-Pending: email/in-app notifications on status changes ("paired with the right
-mentor"); a staff **application detail** view that reveals child identity (must
-log `record_view` on open); re-acknowledgement when the policy version changes.
-
-- **[CONFIRM] Policy version** — consents are stamped with
-  `CURRENT_POLICY_VERSION` (currently `"2026.1-draft"` in
-  `src/lib/content/policy.ts`). Confirm the real versioning scheme and the first
-  published Organisational Policy & Code of Conduct version.
-- **[VERIFY] Pass mark 60%** — still to confirm (assessments, later phase).
+### Online applications — REMOVED (2026-11-23)
+Owner decision: applications are **not** handled online. The whole apply-as-mentee
+flow was removed — website Apply/Join CTAs, the LMS `/app/apply`, `/app/review`,
+dual-consent and **IHF Letter PDF**, plus `src/lib/data/applications.ts`,
+`content/programmes.ts`, `content/policy.ts`, `pdf/ihf-letter.ts`, and the
+`pdf-lib` dependency. The tables `applications`, `consents`, `children`,
+`guardians` (and their enums + `current_guardian_id()`/`has_child_access()`) are
+dropped by migration `20261123120000_remove_applications.sql` — **apply this to
+the live Supabase project** (irreversible: it deletes any rows in those tables).
+This deviates from CLAUDE.md's data model (which lists those tables); flagged here
+per the brief. The `app_role` enum (incl. parent_guardian, mentee) is kept.
 
 ## Invitation-only registration — hardening & setup
 - **Website shows no auth** (no sign-in/sign-up links); registration is by signed,

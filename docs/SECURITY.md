@@ -31,18 +31,12 @@ The app is one Next.js codebase split into two experiences:
    `user_roles`.
 4. **RLS** — the real data boundary; the above only decide what to render/route.
 
-**Application flow specifics:**
-- **IHF Letter PDF** (`/app/apply/[id]/letter`) — authorised purely by RLS:
-  `getApplication` only returns a row the caller may see (owning guardian or
-  staff). Requires both consents on file, else `403`. All inserted values are
-  escaped and length-limited in `generateIhfLetter`; served `no-store`.
-- **Staff review** (`/app/review`) — `requireRole(['programme_lead',
-  'quality_assurance'])` + RLS `applications_update_staff`. The list is
-  **data-minimised**: it shows reference, age group, programme and status only —
-  no decrypted child/guardian identity. Each status change records an append-only
-  `log_record_view('applications', id)`.
-- **Consent** — stamped with `CURRENT_POLICY_VERSION` + timestamp;
-  `consents_insert_own` RLS ties each to the owning guardian's own application.
+**Online applications were removed (2026-11-23).** Applications are handled
+offline, so the apply → consent → IHF Letter → staff-review flow and its tables
+(`applications`, `consents`, `children`, `guardians`), enums and the
+`current_guardian_id()` / `has_child_access()` helpers were dropped (migration
+`20261123120000_remove_applications.sql`). The website exposes no apply/join
+CTAs.
 
 **Registration is by invitation only; the website exposes no auth:**
 - The public **Website** links to no sign-in or sign-up anywhere (header, footer,
@@ -133,7 +127,6 @@ Runtime deps are kept minimal and pinned (exact versions + committed lockfile).
 | `@supabase/ssr`, `@supabase/supabase-js` | Supabase Auth/DB clients (mandated stack). |
 | `zod` | Server-side input validation (mandated). |
 | `vitest` (dev) | Unit test runner (mandated). |
-| `pdf-lib` | Programmatic PDF generation (IHF Letter) — no HTML, no template injection. |
 | `pg`, `@types/pg` (dev) | Drives the RLS tests against a real Postgres. |
 | `undici` (dev) | Dev/CI only: routes server `fetch` through the sandbox proxy (see `src/instrumentation.ts`). Guarded by `HTTPS_PROXY`; never imported in production. |
 | `tailwindcss`, `eslint`, `typescript`, `@types/*` (dev) | Build/lint/types. |
@@ -152,18 +145,19 @@ FORCE RLS. Defined in `supabase/migrations/20261109120000_foundation.sql`.
 | `public.is_admin()` | `has_role(auth.uid(), 'admin')` | Used by admin read/manage policies. |
 | `public.log_audit(text, text, uuid, jsonb)` | Append-only writer for `audit_log` | Validates action length; inserts with `actor_id = auth.uid()`. |
 | `public.log_record_view(text, uuid)` | Logs a staff view of a record | Thin wrapper over `log_audit`. |
-| `public.current_guardian_id()` | The guardian id for `auth.uid()` | Scopes children/applications/consents to the owning guardian. |
-| `public.has_child_access()` | Staff who may view child records | admin / programme_lead / safeguarding_officer. Access is RLS; the **app must call `log_record_view`** on each staff view. |
 | `public.handle_new_user()` | Creates a profile row on signup | Trigger on `auth.users`; inserts only the id (no PII), idempotent. |
+
+(`current_guardian_id()` / `has_child_access()` were dropped with the online
+application feature — 2026-11-23.)
 
 ### Field-level encryption (sensitive child/guardian data)
 `src/lib/security/crypto.ts` provides AES-256-GCM authenticated encryption keyed
-from `FIELD_ENCRYPTION_KEY` (held **outside** the database). Child/guardian PII
-(name, DOB, school, health/welfare notes, guardian contacts) is encrypted by the
-app before insert; the `*_enc` columns hold ciphertext only, so a DB dump/backup
-never contains plaintext. Decryption fails closed on tampering. Tested in
-`crypto.test.ts`. The IHF Letter PDF (`src/lib/pdf/ihf-letter.ts`) is built
-programmatically (no HTML) and length-limits/strips every inserted value.
+from `FIELD_ENCRYPTION_KEY` (held **outside** the database), so any future
+sensitive field is stored as ciphertext only and a DB dump never contains
+plaintext. Decryption fails closed on tampering. Tested in `crypto.test.ts`. It
+also derives (domain-separated) the invite-link signing key — `invite.test.ts`.
+(The encrypted child/guardian columns it protected were removed with the online
+application feature on 2026-11-23.)
 
 `public.set_updated_at()` is a plain (invoker-rights) trigger function, also with
 `search_path` pinned.
@@ -181,8 +175,8 @@ against a Postgres service. These are the per-table/role tests CLAUDE.md require
   (e.g. Upstash/Redis) before production multi-instance deploy. — OPEN_ITEMS.
 - `ignore-scripts` is **not** globally enabled (would break the toolchain);
   supply-chain risk mitigated via pinned lockfile + audit + gitleaks + review.
-- Field-level encryption of sensitive child data: designed/implemented in the
-  phase that introduces `children`/`welfare` tables (Phase 3), keys held outside
+- Field-level encryption of sensitive data: `crypto.ts` is ready; apply it to
+  any future sensitive table (e.g. `welfare`), keys held outside
   the DB.
 - Backups / PITR and a documented restore test: to be added before launch.
 - Incident response plan (who is called, key rotation, family notification):

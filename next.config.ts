@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
       { source: "/auth/sign-up", destination: "/sign-up", permanent: true },
       { source: "/auth/confirm", destination: "/confirm", permanent: false },
       { source: "/account", destination: "/app/account", permanent: true },
-      { source: "/apply", destination: "/app/apply", permanent: true },
     ];
   },
   // NOTE: `cacheComponents`/`partialPrefetching` are intentionally OFF.

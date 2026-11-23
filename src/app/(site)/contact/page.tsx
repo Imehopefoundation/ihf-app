@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 const FAQ = [
   {
-    q: "Who can apply to become a mentee?",
-    a: "Young people aged 6–16. For ages 6–11 a parent or guardian applies and manages everything; for 12–16 a supervised teen account follows parental consent.",
+    q: "Who can take part as a mentee?",
+    a: "Young people aged 6–16. For ages 6–11 a parent or guardian takes part on their behalf; for 12–16 with parental consent. To begin, contact our team.",
   },
   {
     q: "How do mentors join IHF?",

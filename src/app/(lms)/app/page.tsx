@@ -15,7 +15,6 @@ export default async function LmsDashboard() {
 
   const roleLabel =
     roles.length > 0 ? roles.map((r) => r.replace(/_/g, " ")).join(", ") : "member";
-  const isStaffless = roles.length === 0;
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -24,23 +23,6 @@ export default async function LmsDashboard() {
       <p className="mt-2 text-sm text-ink-soft">
         You are signed in as <span className="text-ink">{roleLabel}</span>.
       </p>
-
-      {isStaffless && (
-        <div className="mt-6 rounded-[var(--radius-lg)] border border-cream-200 bg-cream/50 p-5">
-          <h2 className="font-semibold text-ink">New here?</h2>
-          <p className="mt-1 text-sm text-ink-soft">
-            To apply on behalf of a child, start by registering as a parent or
-            guardian. Your details are encrypted and visible only to authorised
-            IHF staff.
-          </p>
-          <Link
-            href="/app/apply"
-            className="mt-4 inline-flex rounded-[var(--radius)] bg-forest px-4 py-2 text-sm font-medium text-cream hover:bg-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
-          >
-            Start an application
-          </Link>
-        </div>
-      )}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {cards.map((c) => (
