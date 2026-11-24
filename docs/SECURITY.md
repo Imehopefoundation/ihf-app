@@ -170,6 +170,16 @@ cannot grant roles; `audit_log` rejects UPDATE/DELETE for every role; and every
 table has RLS **enabled and forced**. Run with `npm run db:test`; CI runs it
 against a Postgres service. These are the per-table/role tests CLAUDE.md requires.
 
+## LMS videos (embedded players)
+Mentors post a **link**; mentees watch it embedded. We never embed a raw
+user-supplied URL: `src/lib/video.ts` parses the link, accepts **only YouTube or
+Vimeo**, extracts the opaque id, and stores just `provider` + `video_ref`. The
+iframe `src` is rebuilt from a fixed template (`youtube-nocookie.com` / Vimeo),
+so it is always one of our allow-listed hosts. The CSP `frame-src` is widened to
+exactly those hosts (nothing else can be framed). `videos` RLS: mentors insert/
+manage only their own rows; mentors/mentees/admin may watch; no anon access.
+Tested in `scripts/rls-tests/videos.test.mjs` and `src/lib/video.test.ts`.
+
 ## 5. Known risks / follow-ups
 - **CI GitHub Actions are pinned to major tags** (e.g. `actions/checkout@v4`),
   not commit SHAs. SHA-pinning is the stronger supply-chain posture (Semgrep

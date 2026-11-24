@@ -9,6 +9,7 @@
  * strict-origin-when-cross-origin, Permissions-Policy denying camera /
  * microphone / geolocation by default, frame-ancestors 'none', COOP/CORP.
  */
+import { VIDEO_FRAME_HOSTS } from "@/lib/video";
 
 export interface SecurityHeaderOptions {
   /** Per-request nonce (base64). Required in production for the strict CSP. */
@@ -52,7 +53,8 @@ export function buildContentSecurityPolicy({ nonce, isDev = false }: SecurityHea
     ["connect-src", `'self'`],
     ["manifest-src", `'self'`],
     ["worker-src", `'self' blob:`],
-    ["frame-src", `'none'`],
+    // Embedded video players only (mentor-posted YouTube/Vimeo links).
+    ["frame-src", [`'self'`, ...VIDEO_FRAME_HOSTS].join(" ")],
     ["upgrade-insecure-requests", ""],
   ];
 
