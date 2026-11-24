@@ -16,6 +16,7 @@
 -- ============================================================
 drop policy if exists profiles_select_own on public.profiles;
 drop policy if exists profiles_select_admin on public.profiles;
+drop policy if exists profiles_select on public.profiles;
 drop policy if exists profiles_insert_self on public.profiles;
 drop policy if exists profiles_update_own on public.profiles;
 
@@ -37,6 +38,7 @@ create policy profiles_update_own on public.profiles
 -- ============================================================
 drop policy if exists user_roles_select_own on public.user_roles;
 drop policy if exists user_roles_select_admin on public.user_roles;
+drop policy if exists user_roles_select on public.user_roles;
 drop policy if exists user_roles_admin_insert on public.user_roles;
 drop policy if exists user_roles_admin_update on public.user_roles;
 drop policy if exists user_roles_admin_delete on public.user_roles;
