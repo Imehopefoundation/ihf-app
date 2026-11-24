@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import { Sora, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
@@ -35,7 +36,7 @@ export const viewport: Viewport = {
   themeColor: "#f6f2e9",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
   // Reading a request header opts every route into per-request (dynamic)
   // rendering, which is what lets Next.js apply the per-request CSP nonce (set
   // in src/proxy.ts) to the <script> tags it generates. Without this, a

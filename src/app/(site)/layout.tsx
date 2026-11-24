@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { ToastProvider } from "@/components/ui/Toast";
 
 /** Public site shell: header + footer around the thin public layer. */
-export default function SiteLayout({ children }: LayoutProps<"/">) {
+export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <ToastProvider>
       <a

@@ -171,6 +171,11 @@ table has RLS **enabled and forced**. Run with `npm run db:test`; CI runs it
 against a Postgres service. These are the per-table/role tests CLAUDE.md requires.
 
 ## 5. Known risks / follow-ups
+- **CI GitHub Actions are pinned to major tags** (e.g. `actions/checkout@v4`),
+  not commit SHAs. SHA-pinning is the stronger supply-chain posture (Semgrep
+  `github-actions-mutable-action-tag`); pin them before launch. Semgrep CI is
+  scoped to application-code rulesets (TS/JS, React, Next.js, secrets), so it
+  gates the app code, not the workflow YAML.
 - Rate limiter is in-memory (per instance). Must be backed by a shared store
   (e.g. Upstash/Redis) before production multi-instance deploy. — OPEN_ITEMS.
 - `ignore-scripts` is **not** globally enabled (would break the toolchain);

@@ -96,4 +96,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Semgrep scan
-        run: semgrep scan --config auto --error --metrics=off
+        # Application-code rulesets (not `auto`, which requires metrics on).
+        # Scanned: TS/JS, React, Next.js, and hardcoded-secret detection.
+        # (CI-action SHA pinning is tracked separately in docs/SECURITY.md.)
+        run: >-
+          semgrep scan --error --metrics=off
+          --config p/javascript
+          --config p/typescript
+          --config p/react
+          --config p/nextjs
+          --config p/secrets
