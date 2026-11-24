@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { requireSessionUser } from "@/lib/auth/session";
+import { createClient } from "@/lib/supabase/server";
+import { getProfileName } from "@/lib/data/profile";
 import { LMS_NAV } from "@/components/lms/nav";
 import { LmsHero } from "@/components/lms/LmsHero";
 import { SectionCard } from "@/components/lms/SectionCard";
@@ -9,6 +11,8 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function LmsDashboard() {
   const { user, roles } = await requireSessionUser("/app");
   const isAdmin = roles.includes("admin");
+  const supabase = await createClient();
+  const name = await getProfileName(supabase, user.id);
 
   const cards = LMS_NAV.filter(
     (i) => i.href !== "/app" && (!i.roles || isAdmin || i.roles.some((r) => roles.includes(r))),
@@ -21,8 +25,8 @@ export default async function LmsDashboard() {
     <div className="mx-auto max-w-4xl">
       <LmsHero
         eyebrow="Welcome back"
-        title="Great to see you"
-        subtitle={`Signed in as ${user.email} · ${roleLabel}. What you receive, you pass on.`}
+        title={name ? `Welcome, ${name}` : "Welcome back"}
+        subtitle={`You're signed in as ${roleLabel}.${name ? "" : " Add your name in Account."} What you receive, you pass on.`}
         scripture="But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
         reference="Matthew 6:33 (KJV)"
       />

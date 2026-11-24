@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Mentoring" };
 
 const SECTIONS: HubSection[] = [
   { href: "/app/mentoring/videos", label: "Videos", blurb: "Post YouTube/Vimeo links for your mentees.", ready: true, icon: "video" },
-  { href: null, label: "Calendar", blurb: "Your course schedule — dates and times.", ready: false, icon: "calendar" },
+  { href: "/app/mentoring/calendar", label: "Calendar", blurb: "Your course schedule — dates and times.", ready: true, icon: "calendar" },
   { href: null, label: "My mentees", blurb: "The mentees paired to you (via IHF).", ready: false, icon: "mentees" },
   { href: null, label: "Sessions", blurb: "Record devotion, code-of-conduct, attendance.", ready: false, icon: "sessions" },
   { href: null, label: "Assessments", blurb: "Design assessments (QA-reviewed) and score work.", ready: false, icon: "assessment" },
