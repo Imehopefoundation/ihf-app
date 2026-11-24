@@ -121,6 +121,23 @@ per the brief. The `app_role` enum (incl. parent_guardian, mentee) is kept.
   granting is a separate admin feature (needs a SECURITY DEFINER grant function
   or service_role), still to build.
 
+## Supabase advisors
+- **Performance advisors — fixed in SQL** (migration
+  `20261124120000_advisor_fixes.sql`, validated: all 22 RLS tests pass against
+  real Postgres): wrapped `auth.uid()`/role checks in sub-selects (Auth RLS Init
+  Plan), merged the duplicate SELECT policies on `profiles`/`user_roles`
+  (Multiple Permissive Policies), and indexed the unindexed FKs
+  (`user_roles.granted_by`, `audit_log.actor_id`, `contact_messages.handled_by`).
+  **Apply this migration to the live project** (SQL editor).
+- **Security advisors — Auth DASHBOARD settings [ACTION, not SQL]:**
+  - Enable **Leaked password protection** (Auth → Providers/Policies) —
+    checks new passwords against HaveIBeenPwned.
+  - Enable **MFA / TOTP** (Auth → Multi-Factor) — CLAUDE.md requires 2FA for
+    all staff/admin roles (passkeys/TOTP, no SMS-only).
+  - Review **OTP/email-link expiry** (keep ≤ 1 hour) if flagged.
+- After applying, re-run the Security & Performance advisors and share anything
+  that remains so it can be addressed.
+
 ## Technical follow-ups (see docs/SECURITY.md)
 - Static caching for public pages: all routes are currently dynamically rendered
   so the strict nonce CSP applies. Reintroduce static/edge caching for public

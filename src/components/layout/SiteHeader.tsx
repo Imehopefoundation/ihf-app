@@ -18,30 +18,32 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-cream-200 bg-cream/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4">
         <Link href="/" aria-label="IME HOPE FOUNDATION — home" className="shrink-0">
           <Logo priority />
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-ink hover:text-forest"
-            >
-              {item.label}
+        {/* Everything else grouped to the far right; Give sits at the extreme right. */}
+        <div className="ml-auto hidden items-center gap-6 lg:flex">
+          <nav aria-label="Primary" className="flex items-center gap-6">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm font-medium text-ink hover:text-forest"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex items-center gap-3">
+            <Link href="/app" className={buttonClasses("ghost", "sm")}>
+              LMS
             </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/app" className={buttonClasses("ghost", "sm")}>
-            LMS
-          </Link>
-          <Link href="/give" className={buttonClasses("give", "sm")}>
-            Give
-          </Link>
+            <Link href="/give" className={buttonClasses("give", "sm")}>
+              Give
+            </Link>
+          </div>
         </div>
 
         <button
@@ -50,7 +52,7 @@ export function SiteHeader() {
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="rounded p-2 text-forest lg:hidden focus-visible:outline-2 focus-visible:outline-forest"
+          className="ml-auto rounded p-2 text-forest lg:hidden focus-visible:outline-2 focus-visible:outline-forest"
         >
           <span aria-hidden="true">{open ? "✕" : "☰"}</span>
         </button>
