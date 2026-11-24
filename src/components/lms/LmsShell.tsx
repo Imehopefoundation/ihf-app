@@ -7,6 +7,7 @@ import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
 import type { AppRole } from "@/lib/auth/session";
 import { LMS_NAV } from "./nav";
+import { Icon } from "./icons";
 import { signOut } from "@/app/(auth)/actions";
 
 function visible(roles: AppRole[]) {
@@ -38,12 +39,13 @@ function NavList({
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-[var(--radius)] border-l-2 px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-3 rounded-[var(--radius)] border-l-2 px-3 py-2 text-sm transition-colors",
               active
                 ? "border-gold bg-cream-100 font-semibold text-ink"
                 : "border-transparent text-ink-soft hover:bg-cream-100 hover:text-ink",
             )}
           >
+            <Icon name={item.icon} className={cn("h-[18px] w-[18px]", active ? "text-gold" : "text-ink-soft")} />
             {item.label}
           </Link>
         );

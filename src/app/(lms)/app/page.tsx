@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/session";
 import { LMS_NAV } from "@/components/lms/nav";
+import { LmsHero } from "@/components/lms/LmsHero";
+import { SectionCard } from "@/components/lms/SectionCard";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -18,22 +19,17 @@ export default async function LmsDashboard() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <p className="text-xs font-semibold uppercase tracking-widest text-gold">Welcome</p>
-      <h1 className="mt-1 break-words text-2xl font-semibold text-ink">{user.email}</h1>
-      <p className="mt-2 text-sm text-ink-soft">
-        You are signed in as <span className="text-ink">{roleLabel}</span>.
-      </p>
+      <LmsHero
+        eyebrow="Welcome back"
+        title="Great to see you"
+        subtitle={`Signed in as ${user.email} · ${roleLabel}. What you receive, you pass on.`}
+        scripture="But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
+        reference="Matthew 6:33 (KJV)"
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {cards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="group rounded-[var(--radius-lg)] border border-cream-200 bg-white p-5 transition-colors hover:border-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
-          >
-            <h2 className="font-semibold text-ink group-hover:text-forest">{c.label}</h2>
-            {c.blurb && <p className="mt-1 text-sm text-ink-soft">{c.blurb}</p>}
-          </Link>
+          <SectionCard key={c.href} href={c.href} label={c.label} blurb={c.blurb} icon={c.icon} />
         ))}
       </div>
     </div>

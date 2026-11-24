@@ -1,4 +1,5 @@
 import type { AppRole } from "@/lib/auth/session";
+import type { IconName } from "./icons";
 
 export interface LmsNavItem {
   href: string;
@@ -7,6 +8,7 @@ export interface LmsNavItem {
   roles?: readonly AppRole[];
   /** Short description for the dashboard cards. */
   blurb?: string;
+  icon: IconName;
 }
 
 /**
@@ -15,24 +17,27 @@ export interface LmsNavItem {
  * access with RLS. Nothing here is a security boundary on its own.
  */
 export const LMS_NAV: readonly LmsNavItem[] = [
-  { href: "/app", label: "Dashboard", blurb: "Your overview and next steps." },
+  { href: "/app", label: "Dashboard", blurb: "Your overview and next steps.", icon: "spark" },
   {
     href: "/app/learning",
     label: "My learning",
     roles: ["mentee"],
-    blurb: "Your sessions, assessments and Impact Journal.",
+    blurb: "Videos, sessions, assessments and your Impact Journal.",
+    icon: "sessions",
   },
   {
     href: "/app/mentoring",
     label: "Mentoring",
     roles: ["mentor"],
-    blurb: "Your mentees, session records and assessments.",
+    blurb: "Post videos, record sessions and run assessments.",
+    icon: "mentees",
   },
   {
     href: "/app/safeguarding",
     label: "Safeguarding",
     roles: ["safeguarding_officer"],
     blurb: "Confidential safeguarding reports and case notes.",
+    icon: "shield",
   },
-  { href: "/app/account", label: "Account", blurb: "Your details, roles and sign-out." },
+  { href: "/app/account", label: "Account", blurb: "Your details, roles and sign-out.", icon: "account" },
 ];
