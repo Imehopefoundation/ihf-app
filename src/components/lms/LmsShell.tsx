@@ -83,9 +83,10 @@ export function LmsShell({
             >
               <span aria-hidden="true">{open ? "✕" : "☰"}</span>
             </button>
-            <Link href="/app" aria-label="IHF LMS — dashboard" className="flex items-center gap-2">
+            <Link href="/app" aria-label="IHF LMS — dashboard" className="flex items-center gap-2.5">
               <Logo priority />
-              <span className="hidden text-xs font-semibold uppercase tracking-widest text-ink-soft sm:inline">
+              <span aria-hidden="true" className="h-5 w-px bg-cream-200" />
+              <span className="text-sm font-semibold uppercase tracking-widest text-ink">
                 LMS
               </span>
             </Link>
