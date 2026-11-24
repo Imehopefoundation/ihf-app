@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { requireRole } from "@/lib/auth/session";
 import { createInviteToken } from "@/lib/security/invite";
-import { publicEnv } from "@/lib/env";
+import { supabaseEnv } from "@/lib/env";
 import { validate, z, email as emailSchema } from "@/lib/validation";
 import { logger } from "@/lib/logging/logger";
 
@@ -15,7 +15,7 @@ export interface InviteState {
 }
 
 async function origin(): Promise<string> {
-  const configured = publicEnv().NEXT_PUBLIC_SITE_URL;
+  const configured = supabaseEnv().SITE_URL;
   if (configured) return configured.replace(/\/$/, "");
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";

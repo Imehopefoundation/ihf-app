@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { publicEnv } from "@/lib/env";
+import { supabaseEnv } from "@/lib/env";
 import { validate, z, email } from "@/lib/validation";
 import { verifyInviteToken } from "@/lib/security/invite";
 import { defaultRateLimiter, RATE_LIMITS } from "@/lib/security/rate-limit";
@@ -87,7 +87,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
   let hasSession = false;
   try {
     const supabase = await createClient();
-    const origin = publicEnv().NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const origin = supabaseEnv().SITE_URL ?? "http://localhost:3000";
     const { data, error } = await supabase.auth.signUp({
       email: invite.email, // bound to the invited address
       password,

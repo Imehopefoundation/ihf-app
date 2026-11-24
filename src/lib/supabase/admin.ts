@@ -8,7 +8,7 @@
  * never expose it to the client.
  */
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { publicEnv, serverEnv } from "@/lib/env";
+import { supabaseEnv, serverEnv } from "@/lib/env";
 
 if (typeof window !== "undefined") {
   // Hard stop: importing this anywhere that ships to the browser is a bug.
@@ -16,9 +16,9 @@ if (typeof window !== "undefined") {
 }
 
 export function createAdminClient() {
-  const pub = publicEnv();
+  const pub = supabaseEnv();
   const srv = serverEnv();
-  return createSupabaseClient(pub.NEXT_PUBLIC_SUPABASE_URL, srv.SUPABASE_SERVICE_ROLE_KEY, {
+  return createSupabaseClient(pub.SUPABASE_URL, srv.SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

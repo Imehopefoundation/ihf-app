@@ -3,35 +3,43 @@
  * before Supabase is wired, but any code that actually uses these values gets a
  * clear, early failure if they're missing. Values are never logged.
  *
- * Only NEXT_PUBLIC_* reach the browser bundle. The service_role key is read via
- * serverEnv(), which refuses to run in the browser (CLAUDE.md: service_role is
- * server-only, never in client bundles, never in NEXT_PUBLIC_).
+ * Supabase runs ENTIRELY server-side in this app (no browser Supabase client),
+ * so its URL and anon key are read from plain, non-public env vars and are never
+ * shipped to the browser bundle. The service_role key is read via serverEnv(),
+ * which refuses to run in the browser.
+ *
+ * Vercel / .env var names:
+ *   NEXT_SUPABASE_URL, NEXT_SUPABASE_ANON_KEY, NEXT_SITE_URL (optional),
+ *   SUPABASE_SERVICE_ROLE_KEY, FIELD_ENCRYPTION_KEY.
  */
 import { z } from "zod";
 
-const publicSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  NEXT_PUBLIC_SITE_URL: z.url().optional(),
+const supabaseSchema = z.object({
+  SUPABASE_URL: z.url(),
+  SUPABASE_ANON_KEY: z.string().min(1),
+  SITE_URL: z.url().optional(),
 });
 
 const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
 });
 
-let cachedPublic: z.infer<typeof publicSchema> | null = null;
+let cachedSupabase: z.infer<typeof supabaseSchema> | null = null;
 let cachedServer: z.infer<typeof serverSchema> | null = null;
 
-export function publicEnv() {
-  if (!cachedPublic) {
-    cachedPublic = publicSchema.parse({
-      // Referenced statically so Next can inline NEXT_PUBLIC_* at build time.
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+/** Supabase connection config (server-only; URL + anon key). */
+export function supabaseEnv() {
+  if (typeof window !== "undefined") {
+    throw new Error("supabaseEnv() must never be called in the browser.");
+  }
+  if (!cachedSupabase) {
+    cachedSupabase = supabaseSchema.parse({
+      SUPABASE_URL: process.env.NEXT_SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.NEXT_SUPABASE_ANON_KEY,
+      SITE_URL: process.env.NEXT_SITE_URL,
     });
   }
-  return cachedPublic;
+  return cachedSupabase;
 }
 
 export function serverEnv() {
