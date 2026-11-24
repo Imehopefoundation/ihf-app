@@ -26,7 +26,7 @@ export default async function LmsDashboard() {
       <LmsHero
         eyebrow="Welcome back"
         title={name ? `Welcome, ${name}` : "Welcome back"}
-        subtitle={`You're signed in as ${roleLabel}.${name ? "" : " Add your name in Account."} What you receive, you pass on.`}
+        subtitle={`You're signed in as ${roleLabel}.`}
         scripture="But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
         reference="Matthew 6:33 (KJV)"
       />

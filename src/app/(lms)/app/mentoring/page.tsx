@@ -18,7 +18,6 @@ export default async function MentoringHub() {
     <LmsHub
       eyebrow="Raising the next generation"
       title="Pour into those you lead"
-      intro="Post videos, manage your schedule and mentees, record sessions and run assessments. No private messaging — all contact goes via IHF."
       scripture="The same commit thou to faithful men, who shall be able to teach others also."
       reference="2 Timothy 2:2 (KJV)"
       sections={SECTIONS}

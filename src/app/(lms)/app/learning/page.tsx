@@ -18,7 +18,6 @@ export default async function LearningHub() {
     <LmsHub
       eyebrow="Your journey"
       title="Keep growing, keep rising"
-      intro="Everything for your journey as a mentee — videos, your schedule, sessions, assessments and your Impact Journal."
       scripture="I can do all things through Christ which strengtheneth me."
       reference="Philippians 4:13 (KJV)"
       sections={SECTIONS}
