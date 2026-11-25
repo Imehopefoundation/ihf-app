@@ -180,6 +180,46 @@ exactly those hosts (nothing else can be framed). `videos` RLS: mentors insert/
 manage only their own rows; mentors/mentees/admin may watch; no anon access.
 Tested in `scripts/rls-tests/videos.test.mjs` and `src/lib/video.test.ts`.
 
+## LMS sessions & class reminders (email via Gmail OAuth2)
+**Sessions** (`public.sessions`): a mentor records that a session happened
+(devotion / Code of Conduct / notes); mentees read the shared record. RLS
+enabled+forced — only mentors (or admin) insert, and only the owner (or admin)
+updates/deletes; mentees/mentors/admin read; no anon. Tested in
+`scripts/rls-tests/sessions.test.mjs`.
+
+**Email sending** uses the **Gmail API with OAuth2** (CLAUDE.md "managed auth
+only; no custom password handling"). We hold only a refresh token for the
+foundation account and exchange it server-side for short-lived access tokens
+(cached in memory). **No new npm dependency** — the token exchange and send are
+two plain HTTPS calls (`src/lib/email/gmail.ts`). The client secret and refresh
+token are server-only env vars and are never logged; error messages never echo
+the OAuth response body. When email isn't configured, sending is a safe no-op
+(dev), so the app never breaks.
+
+**Message builder** (`src/lib/email/message.ts`) is the header-injection
+defence: it strips CR/LF/NUL from `To`/`Subject`, length-limits subject and
+body, MIME-encodes non-ASCII subjects, and validates both addresses. Templates
+(`templates.ts`) carry **no child or personal data** — only a class title/date
+(operational) and a **login link** (CLAUDE.md "no sensitive data in email
+bodies; use links that require login"); HTML is escaped, with no remote images
+or tracking pixels. Tested in `src/lib/email/message.test.ts`.
+
+**`notifications` table**: an operational record only — `user_id`, `kind`,
+`ref_id`, and a short **non-personal** subject label; **no email address is
+stored**. RLS enabled+forced: a user reads only their own (admin all); only
+`SELECT` is granted to `authenticated` and all writes are revoked, so only the
+server's `service_role` client writes. A unique index on
+`(user_id, kind, coalesce(ref_id,…))` enforces **one reminder per user per
+event** → the cron is idempotent. Tested in
+`scripts/rls-tests/notifications.test.mjs`.
+
+**`/api/cron/reminders`** (Node runtime) is gated by a **constant-time** Bearer
+`CRON_SECRET` check (401 + no body otherwise). It resolves recipient emails
+server-side via `service_role`, logs **counts only** (never addresses), and is
+scheduled daily in `vercel.json`. Recipients in v1 are all active mentees plus
+the class's mentor (the shared-calendar model); narrow to paired mentees once
+pairings exist — OPEN_ITEMS.
+
 ## 5. Known risks / follow-ups
 - **CI GitHub Actions are pinned to major tags** (e.g. `actions/checkout@v4`),
   not commit SHAs. SHA-pinning is the stronger supply-chain posture (Semgrep

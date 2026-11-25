@@ -146,6 +146,29 @@ per the brief. The `app_role` enum (incl. parent_guardian, mentee) is kept.
 - Backups/PITR + restore test; incident response plan — before launch.
 - Field-level encryption for child/welfare data — Phase 3.
 
+## Email & class reminders (new)
+- **Stack change [CONFIRMED by you]:** email sends via **Gmail API (OAuth2)**
+  instead of Resend. Reason: the foundation is on a `@gmail.com` address (no
+  custom domain yet), so Resend's domain verification/DKIM isn't available;
+  Gmail OAuth2 is managed and revocable. Revisit if/when a custom domain exists
+  (Resend would then give proper SPF/DKIM/DMARC alignment — CLAUDE.md email
+  rules). **No new npm dependency** was added.
+- **[CONFIRM] Reminder recipients:** v1 emails *all active mentees* + the
+  class's mentor (matches the shared calendar everyone can see). Once `pairings`
+  exist, narrow to each mentor's paired mentees.
+- **[CONFIRM] Reminder timing:** cron runs daily at **07:00 UTC** (08:00 WAT),
+  reminding one day before a class. Adjust in `vercel.json` if a different
+  time/lead is wanted.
+- **[VERIFY] Gmail sending limits:** free Gmail ≈ 500 recipients/day; Google
+  Workspace ≈ 2,000/day. Fine at current scale; move to a transactional provider
+  if volume grows.
+- **[CONFIRM] Public base URL:** email login links use `NEXT_SITE_URL`, falling
+  back to `https://imehopefoundation.org` — confirm the real production domain
+  and set `NEXT_SITE_URL` in Vercel.
+- **Payments:** no online payment processor is being built (per your request).
+  `/give` stays a private "contact us to give" page. Reversible — say the word
+  to remove the Give buttons or the page entirely.
+
 ## Stack note
 - Using **Next.js 16.4.5** (latest stable) per "default to latest"; CLAUDE.md
   says "Next.js" without a version. Flag if a pin to 15.x is preferred.
