@@ -5,6 +5,7 @@ import { getProfileName } from "@/lib/data/profile";
 import { LMS_NAV } from "@/components/lms/nav";
 import { LmsHero } from "@/components/lms/LmsHero";
 import { SectionCard } from "@/components/lms/SectionCard";
+import { verseOfTheDay } from "@/lib/content/verses";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -20,15 +21,16 @@ export default async function LmsDashboard() {
 
   const roleLabel =
     roles.length > 0 ? roles.map((r) => r.replace(/_/g, " ")).join(", ") : "member";
+  const verse = verseOfTheDay();
 
   return (
     <div className="mx-auto max-w-4xl">
       <LmsHero
-        eyebrow="Welcome back"
+        eyebrow="Verse of the day"
         title={name ? `Welcome, ${name}` : "Welcome back"}
         subtitle={`You're signed in as ${roleLabel}.`}
-        scripture="But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
-        reference="Matthew 6:33 (KJV)"
+        scripture={verse.text}
+        reference={verse.reference}
       />
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">

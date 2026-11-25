@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "My learning" };
 const SECTIONS: HubSection[] = [
   { href: "/app/learning/videos", label: "Videos", blurb: "Watch videos your mentors have posted.", ready: true, icon: "video" },
   { href: "/app/learning/calendar", label: "Calendar", blurb: "When your courses are, and what time.", ready: true, icon: "calendar" },
-  { href: null, label: "Sessions", blurb: "Your devotion & code-of-conduct records.", ready: false, icon: "sessions" },
+  { href: "/app/learning/sessions", label: "Sessions", blurb: "Your devotion & code-of-conduct records.", ready: true, icon: "sessions" },
   { href: null, label: "Assessments", blurb: "Take and submit your monthly project.", ready: false, icon: "assessment" },
   { href: null, label: "Impact Journal", blurb: "Write and revisit your reflections.", ready: false, icon: "journal" },
 ];
