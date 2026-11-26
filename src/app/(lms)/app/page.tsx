@@ -1,43 +1,13 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/session";
-import { createClient } from "@/lib/supabase/server";
-import { getProfileName } from "@/lib/data/profile";
-import { LMS_NAV } from "@/components/lms/nav";
-import { LmsHero } from "@/components/lms/LmsHero";
-import { SectionCard } from "@/components/lms/SectionCard";
-import { verseOfTheDay } from "@/lib/content/verses";
+import { homeForRoles } from "@/lib/auth/area";
 
-export const metadata: Metadata = { title: "Dashboard" };
-
-export default async function LmsDashboard() {
-  const { user, roles } = await requireSessionUser("/app");
-  const isAdmin = roles.includes("admin");
-  const supabase = await createClient();
-  const name = await getProfileName(supabase, user.id);
-
-  const cards = LMS_NAV.filter(
-    (i) => i.href !== "/app" && (!i.roles || isAdmin || i.roles.some((r) => roles.includes(r))),
-  );
-
-  const roleLabel =
-    roles.length > 0 ? roles.map((r) => r.replace(/_/g, " ")).join(", ") : "member";
-  const verse = verseOfTheDay();
-
-  return (
-    <div className="mx-auto max-w-4xl">
-      <LmsHero
-        eyebrow="Verse of the day"
-        title={name ? `Welcome, ${name}` : "Welcome back"}
-        subtitle={`You're signed in as ${roleLabel}.`}
-        scripture={verse.text}
-        reference={verse.reference}
-      />
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {cards.map((c) => (
-          <SectionCard key={c.href} href={c.href} label={c.label} blurb={c.blurb} icon={c.icon} />
-        ))}
-      </div>
-    </div>
-  );
+/**
+ * The LMS entry point is a router, not a shared dashboard: each person is sent
+ * to their own area's home — mentees, mentors and admins never land on the same
+ * screen. The onboarding name gate (in the layout) runs first.
+ */
+export default async function LmsEntry() {
+  const { roles } = await requireSessionUser("/app");
+  redirect(homeForRoles(roles));
 }

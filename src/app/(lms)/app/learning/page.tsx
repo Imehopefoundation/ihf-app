@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
+import { createClient } from "@/lib/supabase/server";
+import { getProfileName } from "@/lib/data/profile";
+import { verseOfTheDay } from "@/lib/content/verses";
 import { LmsHub, type HubSection } from "@/components/lms/Hub";
 
 export const metadata: Metadata = { title: "My learning" };
@@ -13,13 +16,18 @@ const SECTIONS: HubSection[] = [
 ];
 
 export default async function LearningHub() {
-  await requireRole(["mentee"]);
+  const { user } = await requireRole(["mentee"]);
+  const supabase = await createClient();
+  const name = await getProfileName(supabase, user.id);
+  const verse = verseOfTheDay();
+
   return (
     <LmsHub
-      eyebrow="Your journey"
-      title="Keep growing, keep rising"
-      scripture="I can do all things through Christ which strengtheneth me."
-      reference="Philippians 4:13 (KJV)"
+      eyebrow="Verse of the day"
+      title={name ? `Welcome, ${name}` : "Welcome back"}
+      intro="Keep growing, keep rising."
+      scripture={verse.text}
+      reference={verse.reference}
       sections={SECTIONS}
     />
   );

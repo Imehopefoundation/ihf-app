@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { requireSessionUser } from "@/lib/auth/session";
+import { primaryArea } from "@/lib/auth/area";
+import { navForArea } from "@/components/lms/nav";
 import { createClient } from "@/lib/supabase/server";
 import { getProfileName } from "@/lib/data/profile";
 import { LmsShell } from "@/components/lms/LmsShell";
@@ -49,9 +51,12 @@ export default async function LmsLayout({ children }: { children: ReactNode }) {
     );
   }
 
+  const area = primaryArea(roles);
+  const navItems = navForArea(area);
+
   return (
     <ToastProvider>
-      <LmsShell email={user.email ?? ""} roles={roles}>
+      <LmsShell email={user.email ?? ""} items={navItems}>
         {children}
       </LmsShell>
     </ToastProvider>

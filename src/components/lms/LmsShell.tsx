@@ -5,18 +5,22 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
-import type { AppRole } from "@/lib/auth/session";
-import { LMS_NAV } from "./nav";
+import type { LmsNavItem } from "./nav";
 import { Icon } from "./icons";
 import { signOut } from "@/app/(auth)/actions";
 
-function visible(roles: AppRole[]) {
-  const isAdmin = roles.includes("admin");
-  return LMS_NAV.filter((i) => !i.roles || isAdmin || i.roles.some((r) => roles.includes(r)));
-}
-
-function isActive(pathname: string, href: string) {
-  return href === "/app" ? pathname === "/app" : pathname === href || pathname.startsWith(href + "/");
+/**
+ * The active item is the one whose href is the LONGEST prefix of the current
+ * path, so on /app/learning/videos the "Videos" item is active, not "Dashboard".
+ */
+function activeHref(items: readonly LmsNavItem[], pathname: string): string | null {
+  let best: string | null = null;
+  for (const item of items) {
+    if (pathname === item.href || pathname.startsWith(item.href + "/")) {
+      if (!best || item.href.length > best.length) best = item.href;
+    }
+  }
+  return best;
 }
 
 function NavList({
@@ -24,14 +28,15 @@ function NavList({
   pathname,
   onNavigate,
 }: {
-  items: typeof LMS_NAV;
+  items: readonly LmsNavItem[];
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const current = activeHref(items, pathname);
   return (
     <nav aria-label="LMS" className="flex flex-col gap-1">
       {items.map((item) => {
-        const active = isActive(pathname, item.href);
+        const active = item.href === current;
         return (
           <Link
             key={item.href}
@@ -58,16 +63,15 @@ function NavList({
  *  public website chrome (SiteHeader/SiteFooter). */
 export function LmsShell({
   email,
-  roles,
+  items,
   children,
 }: {
   email: string;
-  roles: AppRole[];
+  items: readonly LmsNavItem[];
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const items = visible(roles);
 
   return (
     <div className="flex min-h-full flex-col">
